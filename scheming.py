@@ -52,6 +52,7 @@ for index, row in df.iterrows():
     # If this is the total section
     if pro.lower() == 'total':
         totaling = True
+        print('>> total detected <<')
         nam2 = f'{chart} - Total'
         grap.loc[len(grap)] = [nam2, year, value]
         print(grap)
@@ -59,7 +60,7 @@ for index, row in df.iterrows():
         if totaling:
             #need to save to that graph for the totaling and exit 
             pass
-
+        
         totaling = False
         Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
         Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
@@ -80,7 +81,7 @@ for index, row in df.iterrows():
                 else:
                     Sgraph.loc[len(grap)] = [chart, year, value]
                     state=0
-                    
+
 
             if scenario == 'Announced Pledges Scenario':
                 if state !=1:
@@ -103,15 +104,15 @@ for index, row in df.iterrows():
                     Ngraph.loc[len(grap)] = [chart, year, value]
                     state=2
 
-        elif chart != pre:
+        elif (chart != pre and index!=0):
             
 
             #when the flow changes we save the dataframes and reset
-            l=['S','A','N']
+            l = ['S', 'A', 'N']
             for i in l:
-                g=f'{i}graph'
-                years = g['years'].tolist()
-                values = g['values'].tolist()
+                current_graph = globals()[f'{i}graph']
+                years = current_graph['years'].tolist()
+                values = current_graph['values'].tolist() 
                 create_plots(years, values, unit, chart, pro)
 
             Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
