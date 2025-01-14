@@ -1,3 +1,23 @@
+
+# This file defines the functions which will load the regional and world data, proceess the contiguous csvs and pass the lists to the generate plots python file which ultimately passes the html graph to the app.py file
+
+#the main function will be called when the app.py starts, and then this file will return a lookup table of PLOT.NAME | 3 plots:
+
+# the 4 exported plots are the following: the three key scenarios total values compared over the projected timeline, then the individual high information breakdowns for each of them.
+
+# maybe lets get this working for hte world for now, and then look into regional after...
+
+
+need to make the auto populating plot of percentage divergence
+
+
+
+GRAPH THE % DIVERGENCE OVER TIME
+GRAPH THE % DIVERGENCE OVER TIME
+GRAPH THE % DIVERGENCE OVER TIME
+
+
+make recommendations based 
 import pandas as pd
 import plotly.express as px
 import pandas as pd
