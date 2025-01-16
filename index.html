@@ -22,6 +22,16 @@
     </style>
 </head>
 <body>
+<form onchange="alert(this.id)"> 
+<select id="1"> 
+<option value="1">1</option> 
+<option value="2">2</option> 
+<option value="3">3</option> 
+</select> 
+</form>
+
+       
+    <div onClick="RunMe()">Click me<div>
     <div class="container">
         <header>
             <h1>Welcome to My Page</h1>
@@ -29,6 +39,8 @@
         <main>
             <p>This is a basic HTML shell to get you started.</p>
             <!-- Add your content here -->
+            <div id=graph1></div>
+            
         </main>
         <footer>
             <p>&copy; 2025 Your Name</p>
@@ -36,7 +48,12 @@
     </div>
     <!-- Add your JavaScript files or inline scripts here -->
     <script>
-        // Your JavaScript code here
-    </script>
+
+        function RunMe(){
+            
+        const myElement = document.getElementById("graph1");
+        myElement.innerHTML = "<h1>Hello</h1>";
+        }
+          </script>
 </body>
 </html>
