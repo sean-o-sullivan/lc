@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Page Title</title>
-    <!-- Add your CSS files or inline styles here -->
+    <link rel="stylesheet" href="static/style.css">   
+    
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,15 +22,18 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
+
+    
 </head>
 <body>
-<form onchange="alert(this.id)"> 
-<select id="1"> 
-<option value="1">1</option> 
-<option value="2">2</option> 
-<option value="3">3</option> 
-</select> 
-</form>
+      <form>
+            <select id="chartChoice" onchange="checkChart(this.value)">
+                <option value="0">Please select a value:</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </form>
 
        
     <div onClick="RunMe()">Click me<div>
@@ -38,7 +43,7 @@
         </header>
         <main>
             <p>This is a basic HTML shell to get you started.</p>
-            <!-- Add your content here -->
+
             <div id=graph1></div>
             
         </main>
@@ -47,13 +52,34 @@
         </footer>
     </div>
     <!-- Add your JavaScript files or inline scripts here -->
-    <script>
+
+    <script lang="javascript">
 
         function RunMe(){
+
+        // Define the divs which will contain the respective plots
+        const totalChart = document.getElementById("graph1");
+        const netZero = document.getElementById("graph1");
+        const announcedPledges = document.getElementById("graph1");
+        const statedPolicies = document.getElementById("graph1");
             
-        const myElement = document.getElementById("graph1");
-        myElement.innerHTML = "<h1>Hello</h1>";
-        }
-          </script>
+            function checkChart(myValue){
+ 
+                switch(myValue) {
+                    case "1":
+                        chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
+                        break;
+                    case "2":
+                        chartDisplay.innerHTML = "Showing Chart <strong>2</strong> now...";
+                        break;
+                    case "3":
+                        chartDisplay.innerHTML = "Showing Chart <strong>3</strong> now...";
+                        break;
+                    default: 
+                        break;
+                }
+            }
+
+        </script>
 </body>
 </html>
