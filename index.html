@@ -70,6 +70,11 @@
         const DivergencePlot = document.getElementById("graph1");
         const DivergenceTable = document.getElementById("graph1");
 
+        //need to automate the population of the dropdown when the app starts, based off a post or get from the html page on load
+
+        need
+            to add an on dom content load evernt 
+            
             
             function checkChart(myValue){
  
@@ -89,5 +94,81 @@
             }
 
         </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+to make the auto populating dropdown, lets do something other than ajax
+
+
+        from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/get_dropdown_data')
+def get_dropdown_data():
+    # Sample data to populate the dropdown
+    data = ['Option 1', 'Option 2', 'Option 3', 'Option 4']
+    return jsonify(data)  # Return the data as JSON
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+        
+
+
+
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-populate Dropdown</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Select an Option</h1>
+
+    <!-- Dropdown element -->
+    <select id="myDropdown">
+        <option value="">Loading...</option>  <!-- Placeholder text -->
+    </select>
+
+    <script>
+        // JavaScript to populate the dropdown with data from Flask backend
+        $(document).ready(function() {
+            // Fetch data from Flask API
+            $.ajax({
+                url: '/get_dropdown_data',  // Flask route
+                method: 'GET',
+                success: function(data) {
+                    // Get the dropdown element
+                    const dropdown = $('#myDropdown');
+
+                    // Clear the dropdown first
+                    dropdown.empty();
+
+                    // Iterate over the returned data and append options
+                    data.forEach(function(item) {
+                        dropdown.append(new Option(item, item));
+                    });
+                },
+                error: function() {
+                    console.error('Failed to load dropdown data');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
