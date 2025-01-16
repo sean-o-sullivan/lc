@@ -10,8 +10,6 @@
 
 need to make the auto populating plot of percentage divergence
 
-
-
 GRAPH THE % DIVERGENCE OVER TIME
 GRAPH THE % DIVERGENCE OVER TIME
 GRAPH THE % DIVERGENCE OVER TIME
@@ -21,6 +19,17 @@ make recommendations based
 import pandas as pd
 import plotly.express as px
 import pandas as pd
+
+
+
+
+
+# Explanation:
+
+# This csv 
+
+
+
 
 
 
