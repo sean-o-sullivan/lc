@@ -1,12 +1,12 @@
 
-# This csv was used to remove unnecessary data from the csvs, run from the command line
+# This python file was used to remove unnecessary data from the csvs, run from the command line.
+# /Users/247124/Desktop/lc/rawRegionalData.csv
 
-# /Users/sean/Desktop/lc/rawRegionalData.csv
 import pandas as pd
 import sys
 import os
 
-def clean(csvPath):
+def clean(csvPath = 'rawGlobalData.csv'):
     
     # Verify that the csv does exist at this path
     if os.path.isfile(csvPath):
@@ -29,8 +29,8 @@ def clean(csvPath):
         # We can drop 'Publicaton' because it is the same in every row: World Energy Outlook 2024
         # Additionally, we can drop the 'Region' column as this csv only features the global data
 
-        # Drop the columns
-        df = data.drop(['PUBLICATION', 'REGION'], axis=1)
+        # Drop the unnecessary columns
+        df = df.drop(['PUBLICATION', 'REGION'], axis=1)
 
         # Replace potential Nan's with 0
         df = df.fillna(0)
@@ -38,13 +38,13 @@ def clean(csvPath):
         
         # Save cleaned df to csv
         exportedCsv = 'cleanedGlobal.csv'
-        df.to_csv(exportedCsv)
+        df.to_csv(exportedCsv, index_label='rowID')
 
         cwd = os.getcwd()
         completePath = os.path.join(cwd, exportedCsv)
         
         print(f'\nDataset cleaneed!\n It has been saved at {completePath}')
-     else:
+    else:
         raise Exception("File doesn't exist at this path!")
 
 
@@ -59,7 +59,9 @@ if __name__ == '__main__':
         clean(csvPath)
         
     else:
-        raise Exception("You need to give me the filepath of the csv to clean as an argument!")
+        print("\nAs you have not provided me with the csv filepath, I will default to the hardcoded location!\n")
+        clean()
+
     
 
         
