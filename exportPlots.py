@@ -115,35 +115,59 @@ for index, row in df.iterrows():
     year = df.loc[index, 'YEAR'] 
     value = df.loc[index, 'VALUE'] 
 
-    totalData = [[0] * 2 for _ in range(1)]
+    # Dynamically initialise the totalData list of lists
+    total_data = []
 
-    if (flow == pre):
+    # Outer loop to create 4 sublists (rows)
+    for i in range(4):
+        total_data.append([] * 1)
+
+
+    # Dynamically initialise the individual data lists of lists
+    # The individual,
+    
+    names = ['Stated','Announced','Net Zero']
+    for name in names:
+
+        name = list()
+        print(name)
+        
+    stated_policies = []
+
+    # Outer loop to create 4 sublists (rows)
+    for i in range(4):
+        total_data.append([] * 1)
+
+
+
+if (flow == pre):
 
         # Check if in the total section
         if product.lower() == 'Total':
 
-            print('>> total detected <<')
+            print(f'>> total detected <<, for chart: {flow}')
+
             totaling = True
             TotalPlotname = f'{flow} - Total'
-            totalData.append[year,value]
-            print(totalData)
+
+            #Save the year to the year column
+            total_data[3].append(year)
+
+            #Save the speicif recorded value to its respective sublist
+            if scenario == 'Stated Policies Scenario':
+                total_data[0].append(value)
+
+            elif scenario == 'Stated Policies Scenario':
+                total_data[1].append(value)
+
+            elif scenario == 'Stated Policies Scenario':
+                total_data[2].append(value)
 
         else:
+
             #save the data collected while totalling and make a plot for this 
             if totaling:
-                years, values = totalData
-                years = [2020, 2021, 2022, 2023]
 
-                this is how we add;
-
-                                # Add 160 to Line 1 (Production)
-                values_data[0].append(160)
-
-                # Add 155 to Line 2 (Consumption)
-                values_data[1].append(155)
-
-                # Add 165 to Line 3 (Exports)
-                values_data[2].append(165)
 
 
                 values_data = [
@@ -166,11 +190,11 @@ for index, row in df.iterrows():
                 totaling=False
 
 
-            Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
+            # Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
+            # Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
+            # Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
 
-            state=int()
+            # state=int()
 
             # We need to recognize when the scenario column changes
 
