@@ -41,7 +41,7 @@ def create_plot(years,values,unit,flow,product):
    fig.write_html(f"static/plot-{titleName}.html")
 
 
-def create_total_plot(years, values_list, unit, flow, product, line_names):
+def create_total_plot(total_data, unit, flow, product, line_names):
     """
     Plots three lines on the same chart with shared years and units.
 
@@ -56,7 +56,9 @@ def create_total_plot(years, values_list, unit, flow, product, line_names):
     
     # Create a combined DataFrame
     df = pd.DataFrame()
-    for name, values in zip(line_names, values_list):
+    years=total_data[3]
+
+    for name, values in zip(line_names, total_data):
         temp_df = pd.DataFrame({
             'Year': years,
             'Value': values,
@@ -92,21 +94,16 @@ def lookup(state):
         return '?'
     
 
-# def saveProcedure():
     
-prev=''
-pre=''
-uniques = pd.DataFrame(columns=['graphName', 'startIndex', 'endIndex'])
-graph = pd.DataFrame(columns=['graphName','years', 'values'])
 totaling=False
+previous_flow=''
+previous_flow = df.loc[0,'FLOW']
 
-
-
-pre = df.loc[0,'FLOW']
 for index, row in df.iterrows():    
 
     # Other columns
     flow = df.loc[index, 'FLOW'] 
+    print(flow)
     product = df.loc[index, 'PRODUCT']
     unit = df.loc[index, 'UNIT'] 
     scenario = df.loc[index, 'SCENARIO'] 
@@ -125,145 +122,128 @@ for index, row in df.iterrows():
 
     # Dynamically initialise the individual data lists of lists
     # The individual,
-    
-    names = ['Stated','Announced','Net Zero']
-    for name in names:
+    # names = ['Stated','Announced','Net Zero']
+    # for name in names:
+    #     list_name = f'{name}_list'
+    #     list_name = list()
 
-        name = list()
-        print(name)
-        
-    stated_policies = []
-
-    # Outer loop to create 4 sublists (rows)
-    for i in range(4):
-        total_data.append([] * 1)
+    #     for i in range(4):
+    #         list_name.append([] * 1)
 
 
+    print(f'the pre is {previous_flow}')
+    # Checks that we are in the same plot 
+    print(f'the flow is {flow}')
+    if (previous_flow.lower() == flow.lower()):
+            print('flow is equal to pre')
 
-if (flow == pre):
+            # Check if in the total section
+            if product.lower() == 'Total':
 
-        # Check if in the total section
-        if product.lower() == 'Total':
+                print(f'>> total detected <<, for chart: {flow}')
 
-            print(f'>> total detected <<, for chart: {flow}')
+                totaling = True
+                TotalPlotname = f'{flow} - Total'
 
-            totaling = True
-            TotalPlotname = f'{flow} - Total'
+                #Save the year to the year column
+                total_data[3].append(year)
 
-            #Save the year to the year column
-            total_data[3].append(year)
+                #Save the speicif recorded value to its respective sublist
+                if scenario == 'Stated Policies Scenario':
+                    total_data[0].append(value)
 
-            #Save the speicif recorded value to its respective sublist
-            if scenario == 'Stated Policies Scenario':
-                total_data[0].append(value)
+                elif scenario == 'Announced Pledges Scenario':
+                    total_data[1].append(value)
 
-            elif scenario == 'Stated Policies Scenario':
-                total_data[1].append(value)
+                elif scenario == 'Net Zero Emissions by 2050 Scenario':
+                    total_data[2].append(value)
 
-            elif scenario == 'Stated Policies Scenario':
-                total_data[2].append(value)
+            else:
+                
+                #save the data collected while totalling and make a plot for this 
+                if totaling:
+                    create_total_plot(
+                        values_list=total_data,
+                        unit=unit,
+                        flow=flow,
+                        product=product,
+                    )
 
-        else:
-
-            #save the data collected while totalling and make a plot for this 
-            if totaling:
-
-
-
-                values_data = [
-                    [100, 120, 130, 145],  # Line 1 values, shall be Stated Policies
-                    [95, 115, 125, 140],   # Line 2 values, shall be Announced Pledges
-                    [105, 125, 135, 150]   # Line 3 values, shall be net zero emissions
-                ]
-
-                create_plot(
-                    years=years,
-                    values_list=values_data,
-                    unit="Metric Tons",
-                    flow="Agriculture",
-                    product="Wheat",
-                    line_names=["Production", "Consumption", "Exports"]
-                )
-
-
-                create_plot(years,values,unit,flow,product)
-                totaling=False
-
-
-            # Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            # Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            # Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
-
-            # state=int()
-
-            # We need to recognize when the scenario column changes
-
-                #need to append to the dataframe for stated policies 
-            # if scenario == 'Stated Policies Scenario':
-            #         if state != 0:
-            #             ah=lookup(state)
-            #             fullgraph = f'{ah}graph'
-            #             fullgraph.loc[len(graph)] = [chart, year, value]
-            #             state=0
-            #         else:
-            #             Sgraph.loc[len(graph)] = [chart, year, value]
-            #             state=0
-
-
-            # if scenario == 'Announced Pledges Scenario':
-            #         if state !=1:
-            #             ah=lookup(state)
-            #             fullgraph = f'{ah}graph'
-            #             fullgraph.loc[len(graph)] = [chart, year, value]
-            #             state=1
-            #         else:
-            #             Agraph.loc[len(graph)] = [chart, year, value]
-            #             state=1
-
-
-            # if scenario == 'Net Zero Emissions by 2050 Scenario':
-            #         if state != 2:
-            #             ah=lookup(state)
-            #             fullgraph = f'{ah}graph'
-            #             fullgraph.loc[len(grap)] = [chart, year, value]
-            #             state=2
-            #         else:
-            #             Ngraph.loc[len(grap)] = [chart, year, value]
-            #             state=2
-
-            # elif (chart != pre):
+                    totaling=False
                 
 
-            #     #when the flow changes we save the dataframes and reset
-            #     l = ['S', 'A', 'N']
-            #     for i in l:
-            #         current_graph = globals()[f'{i}graph']
-            #         years = current_graph['years'].tolist()
-            #         values = current_graph['values'].tolist() 
-            #         create_plots(years, values, unit, chart, pro)
+                # Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
+                # Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
+                # Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
 
-            #     Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            #     Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
-            #     Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
+                # state=int()
+
+                # We need to recognize when the scenario column changes
+
+                    #need to append to the dataframe for stated policies 
+                # if scenario == 'Stated Policies Scenario':
+                #         if state != 0:
+                #             ah=lookup(state)
+                #             fullgraph = f'{ah}graph'
+                #             fullgraph.loc[len(graph)] = [chart, year, value]
+                #             state=0
+                #         else:
+                #             Sgraph.loc[len(graph)] = [chart, year, value]
+                #             state=0
+
+                # if scenario == 'Announced Pledges Scenario':
+                #         if state !=1:
+                #             ah=lookup(state)
+                #             fullgraph = f'{ah}graph'
+                #             fullgraph.loc[len(graph)] = [chart, year, value]
+                #             state=1
+                #         else:
+                #             Agraph.loc[len(graph)] = [chart, year, value]
+                #             state=1
+
+                # if scenario == 'Net Zero Emissions by 2050 Scenario':
+                #         if state != 2:
+                #             ah=lookup(state)
+                #             fullgraph = f'{ah}graph'
+                #             fullgraph.loc[len(grap)] = [chart, year, value]
+                #             state=2
+                #         else:
+                #             Ngraph.loc[len(grap)] = [chart, year, value]
+                #             state=2
+
+                # elif (chart != pre):
+                    
+
+                #     #when the flow changes we save the dataframes and reset
+                #     l = ['S', 'A', 'N']
+                #     for i in l:
+                #         current_graph = globals()[f'{i}graph']
+                #         years = current_graph['years'].tolist()
+                #         values = current_graph['values'].tolist() 
+                #         create_plots(years, values, unit, chart, pro)
+
+                #     Sgraph = pd.DataFrame(columns=['graphName','years', 'values'])
+                #     Agraph = pd.DataFrame(columns=['graphName','years', 'values'])
+                #     Ngraph = pd.DataFrame(columns=['graphName','years', 'values'])
     else:
-        print(f'flow has changed..... from {pre} to {chart}')
-        pre=chart
-        continue
+        print(f'flow has changed..... from {previous_flow} to {flow}')
+        previous_flow=flow
+            
 
 
 
-#this is broken, we need something which will create and append to 3 dataframes until flow changes.  
+    #this is broken, we need something which will create and append to 3 dataframes until flow changes.  
 
-#we actually have 2 cases: total and not. 
-
-
-# v = df.iloc[r]['']
-
-# I need to make dataframes for each general chart, need to split each into three for the 3 different scenarios, and then just compare the totals. 
-# each general chart will have 4 entires, total, and then the three
-#we will use plotly
-#we then can use plotly
-#so theres no need to 
+    #we actually have 2 cases: total and not. 
 
 
-#we will read down the entire csv, and when we run into a change of 
+    # v = df.iloc[r]['']
+
+    # I need to make dataframes for each general chart, need to split each into three for the 3 different scenarios, and then just compare the totals. 
+    # each general chart will have 4 entires, total, and then the three
+    #we will use plotly
+    #we then can use plotly
+    #so theres no need to 
+
+
+    #we will read down the entire csv, and when we run into a change of 
