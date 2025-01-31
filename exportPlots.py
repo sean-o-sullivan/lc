@@ -41,6 +41,7 @@ def create_plot(years,values,unit,flow,product):
    fig.write_html(f"static/plot-{titleName}.html")
 
 
+
 def create_total_plot(total_data, unit, flow, product, line_names):
     """
     Plots three lines on the same chart with shared years and units.
@@ -79,19 +80,19 @@ def create_total_plot(total_data, unit, flow, product, line_names):
     )
 
     # Save plot
-    fig.write_html(f"Total_plot-{title}.html")
+    # fig.write_html(f"Total_plot-{title}.html")
 
 
 
-def lookup(state):
-    if state==0:
-        return 'S'
-    elif state==1:
-        return 'A'
-    elif state==2:
-        return 'N'
-    else:
-        return '?'
+# def lookup(state):
+#     if state==0:
+#         return 'S'
+#     elif state==1:
+#         return 'A'
+#     elif state==2:
+#         return 'N'
+#     else:
+#         return '?'
     
 
     
@@ -131,14 +132,17 @@ for index, row in df.iterrows():
     #         list_name.append([] * 1)
 
 
-    print(f'the pre is {previous_flow}')
+    # print(f'the pre is {previous_flow}')
+
     # Checks that we are in the same plot 
-    print(f'the flow is {flow}')
+
+    # print(f'the flow is {flow}')
     if (previous_flow.lower() == flow.lower()):
-            print('flow is equal to pre')
+            
+            # print('flow is equal to pre')
 
             # Check if in the total section
-            if product.lower() == 'Total':
+            if product == 'Total':
 
                 print(f'>> total detected <<, for chart: {flow}')
 
@@ -158,15 +162,15 @@ for index, row in df.iterrows():
                 elif scenario == 'Net Zero Emissions by 2050 Scenario':
                     total_data[2].append(value)
 
-            else:
-                
-                #save the data collected while totalling and make a plot for this 
-                if totaling:
+            # Save the data collected while totalling and make a plot for this 
+            elif totaling:
+                    print('now saving because we are no longer totaling!')
                     create_total_plot(
-                        values_list=total_data,
+                        total_data=total_data,
                         unit=unit,
                         flow=flow,
                         product=product,
+                        line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
                     )
 
                     totaling=False
