@@ -24,17 +24,28 @@ def create_total_plot(total_data, unit, flow, product, line_names):
     Plots three lines on the same chart with shared years and units.
 
     Parameters:
-    - years: List of years (shared by all lines)
-    - values_list: List of three value lists (one per line)
-    - unit: Y-axis unit (string, shared by all lines)
-    - flow: Flow category (string)
-    - product: Product category (string)
-    - line_names: List of three names for the legend
+    - need to update
     """
-    
+
+    print('create_total_plot called!')
+
     # Create a combined DataFrame
     df = pd.DataFrame()
-    years=total_data[3]
+
+    # we have to append 2 nans to the beginning of the announced pledges and net zero projections as they dont have data from 2010 and 2022    
+    for i in [1, 2]:
+        total_data[i] = [None, None] + total_data[i]
+
+    print(f'We are in Flow: {flow}, Here total_data is! {total_data}')
+    for sub in total_data:
+        print(len(sub))
+
+
+    # This is constant throughout the dataset
+    years = [2010, 2022, 2023, 2030, 2035, 2040, 2050]
+
+    print(f'the years are {years}')
+    print(len(years))
 
     for name, values in zip(line_names, total_data):
         temp_df = pd.DataFrame({
@@ -42,6 +53,7 @@ def create_total_plot(total_data, unit, flow, product, line_names):
             'Value': values,
             'Category': name 
         })
+
         df = pd.concat([df, temp_df], ignore_index=True)
 
     # Generate plot
@@ -57,18 +69,26 @@ def create_total_plot(total_data, unit, flow, product, line_names):
     )
 
     # Save plot
-    # fig.write_html(f"Total_plot-{title}.html")
+    fig.write_html(f"Total_plot-{title}.html")
+    input('holup!')
 
     
 totaling=False
 previous_flow=''
 previous_flow = df.loc[0,'FLOW']
 
+# Dynamically initialise the totalData list of lists
+total_data = []
+
+# Outer loop to create 3 sublists -- This is for the three scenarios.
+for i in range(3):
+    total_data.append([] * 1)
+
+
 for index, row in df.iterrows():    
 
     # Label columns
     flow = df.loc[index, 'FLOW'] 
-    print(flow)
     product = df.loc[index, 'PRODUCT']
     unit = df.loc[index, 'UNIT'] 
     scenario = df.loc[index, 'SCENARIO'] 
@@ -77,55 +97,51 @@ for index, row in df.iterrows():
     year = df.loc[index, 'YEAR'] 
     value = df.loc[index, 'VALUE'] 
 
-    # Dynamically initialise the totalData list of lists
-    total_data = []
-
-    # Outer loop to create 4 sublists -- This is for the three scenarios and also the year column.
-    for i in range(4):
-        total_data.append([] * 1)
-
 
     # print(f'the pre is {previous_flow}')
     # print(f'the flow is {flow}'
     
-    # Checks that we are in the same plot, prevents mixing of non standard data
-    if (previous_flow.lower() == flow.lower()):
-            # print('flow is equal to pre')
+            
+     # Check if in the total section
+    if product == 'Total':
 
-            # Check if in the total section
-            if product == 'Total':
+        print(f'>> total detected <<, for chart: {flow}')
 
-                print(f'>> total detected <<, for chart: {flow}')
+        totaling = True
+        TotalPlotname = f'{flow} - Total'
 
-                totaling = True
-                TotalPlotname = f'{flow} - Total'
-
-                # Save the year to the year column
-                total_data[3].append(year)
+                
 
                 # Save the specific recorded value to its respective sublist
-                if scenario == 'Stated Policies Scenario':
-                    total_data[0].append(value)
+        if scenario == 'Stated Policies Scenario':
+            total_data[0].append(value)
 
-                elif scenario == 'Announced Pledges Scenario':
-                    total_data[1].append(value)
+        elif scenario == 'Announced Pledges Scenario':
+            total_data[1].append(value)
 
-                elif scenario == 'Net Zero Emissions by 2050 Scenario':
-                    total_data[2].append(value)
+        elif scenario == 'Net Zero Emissions by 2050 Scenario':
+            total_data[2].append(value)
+
+        print(f'''the value we just tried to append was {value}
+                appending to {scenario}, heres it: {total_data}'''
+             )
 
             # Save the data collected while totalling and make a plot for this 
-            elif totaling:
-                    print('now saving because we are no longer totaling!')
-                    create_total_plot(
-                        total_data=total_data,
-                        unit=unit,
-                        flow=flow,
-                        product=product,
-                        line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
-                    )
+    elif totaling:
+            print('now saving because we are no longer totaling!')
+            create_total_plot(
+                total_data=total_data,
+                unit=unit,
+                flow=flow,
+                product=product,
+                line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
+            )
             
-                    totaling=False
+            totaling=False
     else:
-        print(f'flow has changed..... from {previous_flow} to {flow}')
-        previous_flow=flow
-            
+        # Re-initialise the totalData list of lists
+        total_data = []
+
+        # Outer loop to create 3 sublists -- This is for the three scenarios.
+        for i in range(3):
+            total_data.append([] * 1)
