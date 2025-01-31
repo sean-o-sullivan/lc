@@ -1,5 +1,9 @@
 
-# This file defines the functions which will load the regional and world data, proceess the contiguous csvs and pass the lists to the generate plots python file which ultimately passes the html graph to the app.py file
+#This file is a mess, I will fix
+# 
+# 
+# 
+#  This file defines the functions which will load the regional and world data, proceess the contiguous csvs and pass the lists to the generate plots python file which ultimately passes the html graph to the app.py file
 
 #the main function will be called when the app.py starts, and then this file will return a lookup table of PLOT.NAME | 3 plots:
 

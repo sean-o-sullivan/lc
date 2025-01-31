@@ -22,7 +22,6 @@ def clean(csvPath = 'rawGlobalData.csv'):
 
         # Fortunately this IEA dataset is incredibly clean, and so all I need to do is some surface level cleaning. 
 
-        
         # The raw csv features the followig columns: PUBLICATION,SCENARIO,CATEGORY,PRODUCT,FLOW,UNIT,REGION,YEAR,VALUE
         # Drop unnecessary columns
 
