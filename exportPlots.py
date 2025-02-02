@@ -16,11 +16,9 @@ import plotly.graph_objects as go
 
 df = pd.read_csv("cleanedGlobal.csv")
 
-print('yo!')
-
 def create_3_plots(total_data, unit, product, flow, category, line_names):
     """
-    Plots three lines on the same chart with shared years and units.
+    Plots three charts of the projected scenarios with shared years and units.
 
     Parameters:
     - need to update
@@ -36,7 +34,9 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
 
     # we have to append 2 nans to the beginning of the announced pledges and net zero projections as they dont have data from 2010 and 2022    
     for i in [1, 2]:
-        total_data[i] = [None, None] + total_data[i]
+        for j in [0,1]:
+            total_data[i][j] = [None, None] + total_data[i][j]
+            
 
     # print(f'We are in Flow: {flow}, Here total_data is! {total_data}')
 
@@ -50,15 +50,20 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     # print(f'the years are {years}')
     # print(len(years))
 
+
     for name, values in zip(line_names, total_data):
         temp_df = pd.DataFrame({
             'Year': years,
             'Value': values,
+            'Product': product,
             'Category': name 
         })
 
-        total_df = pd.concat([total_df, temp_df], ignore_index=True)
+        stated_df = pd.concat([stated_df, temp_df], ignore_index=True)
         
+
+
+
 
     # Create subplot figure
     fig = make_subplots(rows=3, cols=1, 
