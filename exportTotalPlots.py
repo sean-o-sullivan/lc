@@ -97,11 +97,10 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
         if c > 2:
             try:
-
                 divergence_temp_df = pd.DataFrame({
-                    'Year': years,
-                    'Value': (total_data[0][i]/total_data[2][i]),
-                    'Category': name 
+                    'Year': [years[i]], 
+                    'Value': [(total_data[0][i]/total_data[2][i])],  
+                    'Category': ['Percentage Difference']  
                 })
 
             except ZeroDivisionError:
@@ -114,13 +113,13 @@ def create_total_plot(total_data, unit, flow, category, line_names):
             divergence_temp_df = pd.DataFrame({
                 'Year': years,
                 'Value': None,
-                'Category': name 
+                'Category': 'Percentage Difference' 
             })
         c+=1
         divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
 
     # Generate divergence plot
-    title = f"{flow} - {category} - Percentage Divergence"
+    title = f"{flow} - {category} - Percentage Divergence between Stated and Net Zero"
     fig = px.line(
         divergence_df,
         x='Year',

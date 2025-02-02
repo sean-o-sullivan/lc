@@ -20,17 +20,48 @@
         padding: 20px;
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+  }
+
+        .split-container {
+           display: flex;
+        }
+        
+        .left-half, .right-half {
+           width: 50%;
+           padding: 20px;
+        }
+        
+        .plot-container {
+           margin-bottom: 20px;
+        }
+
 </style>
 
 
 <body>
-    <div id=divergence_graph></div>
+
     <h1>testing page!</h1>
 
-    <div id=total_graph></div>
-    <div id=graph1></div>
-    <div id=graph1></div>
+        <div class="split-container">
+           <div class="left-half">
+               <div class="plot-container">
+                   <div id="total_graph"></div>
+                   <div id="divergence_graph"></div>
+               </div>
+           </div>
+           <div class="right-half">
+
+
+               <select id="myDropdown">
+                   <option value="">Loading...</option>
+               </select>
+               <div id=graph1></div>
+               <div id=graph2></div>
+               <div id=graph3></div>
+           </div>
+        </div>
+
+
     
     <!-- Dropdown element -->
     <select id="myDropdown">
@@ -75,7 +106,7 @@
        }
    });
    $.ajax({
-    url: `/get_divergence_plot/${selectedValue} - Percentage Divergence`,
+    url: `/get_divergence_plot/${selectedValue} - Percentage Divergence between Stated and Net Zero`,
        method: 'GET',
        success: function(plotHtml) {
            $('#divergence_graph').html(plotHtml);
@@ -87,7 +118,6 @@
     }
    });
 });
-
         function update_other_plots(){
 
         // Define the divs which will contain the respective plots
