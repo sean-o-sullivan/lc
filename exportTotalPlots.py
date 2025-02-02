@@ -110,7 +110,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     # Add trace for divergence plot
     fig.add_trace(
     go.Scatter(x=divergence_df['Year'], y=divergence_df['Value'], 
-                name='Percentage Divergence', mode='lines+markers'),
+                name='Percentage Divergence', mode='lines+markers', line=dict(color='black', width=2)),
     row=2, col=1
     )
 
