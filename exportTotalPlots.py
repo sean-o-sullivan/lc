@@ -80,9 +80,10 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     fig.update_layout(
         font_color="black",
         title_font_color="black",
-        legend_title_font_color="black"
+        legend_title_font_color="black",
+        width=700,  
+        height=350
     )
-
 
     # Save total plot
     # fig.write_html(f"Total_plot-{title}.html")
@@ -120,21 +121,27 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
     # Generate divergence plot
     title = f"{flow} - {category} - Percentage Divergence between Stated and Net Zero"
+    plot_title = f"% Divergence between Stated Policies and Net Zero"
     fig = px.line(
         divergence_df,
         x='Year',
         y='Value',
         color='Category',
-        title=title,
+        title=plot_title,
         markers=True,
         labels={'Value': '% Diff'}
     )
 
-    divergence_plots_dict[title] = fig.to_html()
-    print("Divergence title:", title)
-    divergence_plots_dict[title] = fig.to_html()
-    print("Divergence dict keys:", divergence_plots_dict.keys())
+    # Add a little styling
+    fig.update_layout(
+        font_color="black",
+        title_font_color="black",
+        legend_title_font_color="black",
+        width=700,  
+        height=350  
+        )
 
+    divergence_plots_dict[title] = fig.to_html()
 
 
 def save_to_sublist(total_data,value,scenario):

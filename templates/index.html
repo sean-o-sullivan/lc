@@ -35,6 +35,20 @@
            margin-bottom: 20px;
         }
 
+
+.plot-pair {
+   display: flex;
+   flex-direction: column;
+   width: 50%;
+}
+
+.plot-container {
+   width: 100%;
+   margin-bottom: 10px;
+}
+
+
+
 </style>
 
 
@@ -45,8 +59,10 @@
         <div class="split-container">
            <div class="left-half">
                <div class="plot-container">
-                   <div id="total_graph"></div>
-                   <div id="divergence_graph"></div>
+                <div class="plot-pair">
+                    <div class="plot-container" id="total_graph"></div>
+                    <div class="plot-container" id="divergence_graph"></div>
+                 </div>
                </div>
            </div>
            <div class="right-half">
@@ -60,14 +76,6 @@
                <div id=graph3></div>
            </div>
         </div>
-
-
-    
-    <!-- Dropdown element -->
-    <select id="myDropdown">
-        <option value="">Loading...</option>  <!-- Placeholder text -->
-    </select>
-
 
     <script>
         // JavaScript to populate the dropdown with data from Flask backend
