@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
-    <link rel="stylesheet" href="static/style.css">   
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-
-    
+    <title>Auto-populate Dropdown</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+    }
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+
 <body>
-      <form>
+    <h1>Select an Option</h1>
+
+    <div id=graph1></div>
+            
+            <div id=graph1></div>
+            <div id=graph1></div>
+            <div id=graph1></div>
+
+            <form>
             <select id="chartChoice" onchange="checkChart(this.value)">
                 <option value="0">Please select a value:</option>
                 <option value="1">1</option>
@@ -34,111 +42,7 @@
             </select>
         </form>
 
-       
-    <div onClick="RunMe()">Click me<div>
-    <div class="container">
-        <header>
-            <h1>Welcome to My Page</h1>
-        </header>
-        <main>
-            <p>This is a basic HTML shell to get you started.</p>
-
-            <div id=graph1></div>
-            
-            <div id=graph1></div>
-            <div id=graph1></div>
-            <div id=graph1></div>
-            
-            
-        </main>
-        <footer>
-            <p>Seán O'Sullivan</p>
-        </footer>
-    </div>
-        
-    <script lang="javascript">
-
-        function RunMe(){
-
-        // Define the divs which will contain the respective plots
-        const totalChart = document.getElementById("graph1");
-        const netZero = document.getElementById("graph1");
-        const announcedPledges = document.getElementById("graph1");
-        const statedPolicies = document.getElementById("graph1");
-
-        const DivergencePlot = document.getElementById("graph1");
-        const DivergenceTable = document.getElementById("graph1");
-
-        //need to automate the population of the dropdown when the app starts, based off a post or get from the html page on load
-
-        need
-            to add an on dom content load evernt 
-            
-            
-            function checkChart(myValue){
- 
-                switch(myValue) {
-                    case "1":
-                        chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
-                        break;
-                    case "2":
-                        chartDisplay.innerHTML = "Showing Chart <strong>2</strong> now...";
-                        break;
-                    case "3":
-                        chartDisplay.innerHTML = "Showing Chart <strong>3</strong> now...";
-                        break;
-                    default: 
-                        break;
-                }
-            }
-
-        </script>
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-to make the auto populating dropdown, lets do something other than ajax
-
-
-        from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route('/get_dropdown_data')
-def get_dropdown_data():
-    # Sample data to populate the dropdown
-    data = ['Option 1', 'Option 2', 'Option 3', 'Option 4']
-    return jsonify(data)  # Return the data as JSON
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-        
-
-
-
-        <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-populate Dropdown</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>Select an Option</h1>
-
+    
     <!-- Dropdown element -->
     <select id="myDropdown">
         <option value="">Loading...</option>  <!-- Placeholder text -->
@@ -168,6 +72,40 @@ if __name__ == '__main__':
                 }
             });
         });
+
+
+
+        function RunMe(){
+
+// Define the divs which will contain the respective plots
+const totalChart = document.getElementById("graph1");
+const netZero = document.getElementById("graph1");
+const announcedPledges = document.getElementById("graph1");
+const statedPolicies = document.getElementById("graph1");
+
+const DivergencePlot = document.getElementById("graph1");
+const DivergenceTable = document.getElementById("graph1");
+
+//need to automate the population of the dropdown when the app starts, based off a post or get from the html page on load
+
+    function checkChart(myValue){
+
+        switch(myValue) {
+            case "1":
+                chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
+                break;
+            case "2":
+                chartDisplay.innerHTML = "Showing Chart <strong>2</strong> now...";
+                break;
+            case "3":
+                chartDisplay.innerHTML = "Showing Chart <strong>3</strong> now...";
+                break;
+            default: 
+                break;
+        }
+    }
+
+    
     </script>
 </body>
 </html>

@@ -69,9 +69,18 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         labels={'Value': unit}
     )
 
+    # Add a little styling
+    fig.update_layout(
+        font_color="black",
+        title_font_color="black",
+        legend_title_font_color="black"
+    )
+
     # Save plot
-    fig.write_html(f"Total_plot-{title}.html")
-    input('holup!')
+    # fig.write_html(f"Total_plot-{title}.html")
+    # input('holup!')
+    plots_dict[title] = fig.to_html()
+
 
 def save_to_sublist(total_data,value,scenario):
 
@@ -87,6 +96,9 @@ def save_to_sublist(total_data,value,scenario):
 
     return total_data
 
+
+plots_dict = {}
+
 totaling=False
 previous_flow=''
 previous_category=''
@@ -99,59 +111,60 @@ total_data = []
 for i in range(3):
     total_data.append([] * 1)
 
+def run():
+        
+    for index, row in df.iterrows():    
 
-for index, row in df.iterrows():    
+        # Label columns
+        flow = df.loc[index, 'FLOW'] 
+        product = df.loc[index, 'PRODUCT']
+        unit = df.loc[index, 'UNIT'] 
+        scenario = df.loc[index, 'SCENARIO'] 
+        category = df.loc[index, 'CATEGORY'] 
 
-    # Label columns
-    flow = df.loc[index, 'FLOW'] 
-    product = df.loc[index, 'PRODUCT']
-    unit = df.loc[index, 'UNIT'] 
-    scenario = df.loc[index, 'SCENARIO'] 
-    category = df.loc[index, 'CATEGORY'] 
+        # Actual data
+        year = df.loc[index, 'YEAR'] 
+        value = df.loc[index, 'VALUE'] 
+                    
 
-    # Actual data
-    year = df.loc[index, 'YEAR'] 
-    value = df.loc[index, 'VALUE'] 
+        if (previous_flow.lower() == flow.lower()) and (previous_category.lower() == category.lower()):
+
+            # Check if in the total section
+            if product == 'Total':
+
+                totaling = True
+                TotalPlotname = f'{flow} - Total'
+                    
+                # Save the specific recorded value to its respective sublist
+                total_data = save_to_sublist(total_data,value,scenario)
+
+                print(f'''the value we just tried to append was {value}
+                        appending to {scenario}, heres it: {total_data}'''
+                    )
                 
+            # Save the data collected while totalling and make a plot for this 
+            elif totaling:
+                    print('now saving because we are no longer totaling!')
+                    create_total_plot(
+                        total_data=total_data,
+                        unit=unit,
+                        flow=flow,
+                        category=category,
+                        line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
+                    )
+                    totaling=False
+        else:
+            totaling=False
 
-    if (previous_flow.lower() == flow.lower()) and (previous_category.lower() == category.lower()):
+            # Re-initialise the totalData list of lists
+            total_data = []
 
-        # Check if in the total section
-        if product == 'Total':
+            # Outer loop to create 3 sublists -- This is for the three scenarios.
+            for i in range(3):
+                total_data.append([] * 1)
 
-            totaling = True
-            TotalPlotname = f'{flow} - Total'
-                
-            # Save the specific recorded value to its respective sublist
+            # This is for when the flow changes and we encounter the first total value of that next flow
             total_data = save_to_sublist(total_data,value,scenario)
 
-            print(f'''the value we just tried to append was {value}
-                    appending to {scenario}, heres it: {total_data}'''
-                )
-            
-        # Save the data collected while totalling and make a plot for this 
-        elif totaling:
-                print('now saving because we are no longer totaling!')
-                create_total_plot(
-                    total_data=total_data,
-                    unit=unit,
-                    flow=flow,
-                    category=category,
-                    line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
-                )
-                totaling=False
-    else:
-        totaling=False
-
-        # Re-initialise the totalData list of lists
-        total_data = []
-
-        # Outer loop to create 3 sublists -- This is for the three scenarios.
-        for i in range(3):
-            total_data.append([] * 1)
-
-        # This is for when the flow changes and we encounter the first total value of that next flow
-        total_data = save_to_sublist(total_data,value,scenario)
-
-    previous_flow=flow
-    previous_category=category
+        previous_flow=flow
+        previous_category=category
