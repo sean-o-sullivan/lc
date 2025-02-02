@@ -19,7 +19,7 @@ import pandas as pd
 df = pd.read_csv("cleanedGlobal.csv")
 
 
-def create_total_plot(total_data, unit, flow, product, line_names):
+def create_total_plot(total_data, unit, flow, category, line_names):
     """
     Plots three lines on the same chart with shared years and units.
 
@@ -37,6 +37,7 @@ def create_total_plot(total_data, unit, flow, product, line_names):
         total_data[i] = [None, None] + total_data[i]
 
     print(f'We are in Flow: {flow}, Here total_data is! {total_data}')
+
     for sub in total_data:
         print(f'The length of {sub} is {len(sub)}')
 
@@ -57,7 +58,7 @@ def create_total_plot(total_data, unit, flow, product, line_names):
         df = pd.concat([df, temp_df], ignore_index=True)
 
     # Generate plot
-    title = f"{flow} - Total"
+    title = f"{flow} - {category}"
     fig = px.line(
         df,
         x='Year',
@@ -88,6 +89,7 @@ def save_to_sublist(total_data,value,scenario):
 
 totaling=False
 previous_flow=''
+previous_category=''
 previous_flow = df.loc[0,'FLOW']
 
 # Dynamically initialise the totalData list of lists
@@ -105,13 +107,14 @@ for index, row in df.iterrows():
     product = df.loc[index, 'PRODUCT']
     unit = df.loc[index, 'UNIT'] 
     scenario = df.loc[index, 'SCENARIO'] 
+    category = df.loc[index, 'CATEGORY'] 
 
     # Actual data
     year = df.loc[index, 'YEAR'] 
     value = df.loc[index, 'VALUE'] 
                 
 
-    if (previous_flow.lower() == flow.lower()):
+    if (previous_flow.lower() == flow.lower()) and (previous_category.lower() == category.lower()):
 
         # Check if in the total section
         if product == 'Total':
@@ -125,8 +128,7 @@ for index, row in df.iterrows():
             print(f'''the value we just tried to append was {value}
                     appending to {scenario}, heres it: {total_data}'''
                 )
-
-
+            
         # Save the data collected while totalling and make a plot for this 
         elif totaling:
                 print('now saving because we are no longer totaling!')
@@ -134,12 +136,13 @@ for index, row in df.iterrows():
                     total_data=total_data,
                     unit=unit,
                     flow=flow,
-                    product=product,
+                    category=category,
                     line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
                 )
                 totaling=False
     else:
         totaling=False
+
         # Re-initialise the totalData list of lists
         total_data = []
 
@@ -151,3 +154,4 @@ for index, row in df.iterrows():
         total_data = save_to_sublist(total_data,value,scenario)
 
     previous_flow=flow
+    previous_category=category
