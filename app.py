@@ -9,7 +9,7 @@ def index():
 
 @app.route('/get_dropdown_titles')
 def get_titles():
-   return jsonify(list(plots_dict.keys()))
+   return jsonify(sorted(list(plots_dict.keys())))
 
 @app.route('/get_plot/<title>')
 def get_plot(title):
