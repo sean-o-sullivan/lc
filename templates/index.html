@@ -27,7 +27,7 @@
 <body>
     <h1>testing page...</h1>
 
-    <div id=graph1></div>
+    <div id=total_graph></div>
     <div id=graph1></div>
     <div id=graph1></div>
     <div id=graph1></div>
@@ -64,6 +64,17 @@
         });
 
 
+        // Add event listener to dropdown
+        $('#myDropdown').change(function() {
+        const selectedValue = $(this).val();
+        $.ajax({
+            url: `/get_plot/${selectedValue}`,
+            method: 'GET',
+            success: function(plotHtml) {
+                $('#total_graph').html(plotHtml);
+            }
+        });
+        });
         function update_other_plots(){
 
         // Define the divs which will contain the respective plots
@@ -76,7 +87,6 @@
         const DivergenceTable = document.getElementById("graph1");
 
         chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
-
         }
 
     </script>
