@@ -140,7 +140,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         width=700,  
         height=350  
         )
-
+    fig.update_traces(line=dict(width=2, color='black'))
+    
     divergence_plots_dict[title] = fig.to_html()
 
 
