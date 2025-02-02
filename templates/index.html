@@ -64,17 +64,18 @@
         });
 
 
-        // Add event listener to dropdown
-        $('#myDropdown').change(function() {
-        const selectedValue = $(this).val();
-        $.ajax({
-            url: `/get_plot/${selectedValue}`,
-            method: 'GET',
-            success: function(plotHtml) {
-                $('#total_graph').html(plotHtml);
-            }
-        });
-        });
+
+        $('#myDropdown').on('change', function() {
+   const selectedValue = $(this).val();
+   $.ajax({
+       url: `/get_plot/${selectedValue}`,
+       method: 'GET',
+       success: function(plotHtml) {
+           $('#total_graph').html(plotHtml);
+       }
+   });
+});
+
         function update_other_plots(){
 
         // Define the divs which will contain the respective plots
