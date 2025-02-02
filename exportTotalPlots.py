@@ -97,7 +97,9 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     fig = make_subplots(rows=2, cols=1, 
                     shared_xaxes=True,
                     subplot_titles=(f"{flow} - {category}", 
-                                    "Percentage Divergence between Stated and Net Zero"))
+                                    "% Divergence between Stated and Net Zero"),
+                    vertical_spacing=0.125
+)
 
     # Add traces for total plot
     for name in total_df['Category'].unique():
