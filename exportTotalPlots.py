@@ -11,13 +11,9 @@ import plotly.graph_objects as go
 # This python file creates the total plots and also the percentage divergence plots and table data, across all of the charts present in the dataset.
 # It iterates through all of the rows in the contiguous cleaned data csv and only processes rows which are of the "Total" info across a plot.
 
-# GRAPH THE % DIVERGENCE OVER TIME
-# GRAPH THE % DIVERGENCE OVER TIME
-# GRAPH THE % DIVERGENCE OVER TIME
+# Graphing the % divergence over time
 
-# and export a table comparison and other statistics!!
-
-# make **recommendations** based 
+# need to make table !!!!
 
 # ______________________________________________________ #
 
@@ -155,7 +151,7 @@ divergence_plots_dict = {}
 
 def run():
         
-    totaling=False
+    totalling=False
     previous_flow=''
     previous_category=''
     previous_flow = df.loc[0,'FLOW']
@@ -168,7 +164,7 @@ def run():
         total_data.append([] * 1)
 
 
-    for index, row in df.iterrows():    
+    for index, _ in df.iterrows():    
 
         # Label columns
         flow = df.loc[index, 'FLOW'] 
@@ -187,8 +183,7 @@ def run():
             # Check if in the total section
             if product == 'Total':
 
-                totaling = True
-                TotalPlotname = f'{flow} - Total'
+                totalling = True
                     
                 # Save the specific recorded value to its respective sublist
                 total_data = save_to_sublist(total_data,value,scenario)
@@ -198,8 +193,8 @@ def run():
                 #     )
                 
             # Save the data collected while totalling and make a plot for this 
-            elif totaling:
-                    # print('now saving because we are no longer totaling!')
+            elif totalling:
+                    # print('now saving because we are no longer totalling!')
                     create_total_plot(
                         total_data=total_data,
                         unit=unit,
@@ -207,9 +202,9 @@ def run():
                         category=category,
                         line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
                     )
-                    totaling=False
+                    totalling=False
         else:
-            totaling=False
+            totalling=False
 
             # Re-initialise the totalData list of lists
             total_data = []
