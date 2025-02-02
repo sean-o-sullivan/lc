@@ -1,6 +1,8 @@
 import pandas as pd
 import plotly.express as px
 import pandas as pd
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 
 # ______________________________________________________ #
@@ -34,7 +36,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     # print('create_total_plot called!')
 
     # Create a combined DataFrame
-    df = pd.DataFrame()
+    total_df = pd.DataFrame()
     divergence_df = pd.DataFrame()  # For total plot
 
 
@@ -61,36 +63,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
             'Category': name 
         })
 
-        df = pd.concat([df, temp_df], ignore_index=True)
-
-
-    # Generate plot
-    title = f"{flow} - {category}"
-    fig = px.line(
-        df,
-        x='Year',
-        y='Value',
-        color='Category',
-        title=title,
-        markers=True,
-        labels={'Value': unit}
-    )
-
-    # Add a little styling
-    fig.update_layout(
-        font_color="black",
-        title_font_color="black",
-        legend_title_font_color="black",
-        width=700,  
-        height=350
-    )
-
-    # Save total plot
-    # fig.write_html(f"Total_plot-{title}.html")
-    # input('holup!')
-    plots_dict[title] = fig.to_html()
-
-
+        total_df = pd.concat([total_df, temp_df], ignore_index=True)
+        
 
     c=0
     # % Divergence between what we are actually predicted to do and what we need to do
@@ -119,30 +93,44 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         c+=1
         divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
 
-    # Generate divergence plot
-    title = f"{flow} - {category} - Percentage Divergence between Stated and Net Zero"
-    plot_title = f"% Divergence between Stated Policies and Net Zero"
-    fig = px.line(
-        divergence_df,
-        x='Year',
-        y='Value',
-        color='Category',
-        title=plot_title,
-        markers=True,
-        labels={'Value': '% Diff'}
+    # Create subplot figure
+    fig = make_subplots(rows=2, cols=1, 
+                    shared_xaxes=True,
+                    subplot_titles=(f"{flow} - {category}", 
+                                    "Percentage Divergence between Stated and Net Zero"))
+
+    # Add traces for total plot
+    for name in total_df['Category'].unique():
+        plot_df = total_df[total_df['Category'] == name]
+        fig.add_trace(
+            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
+            row=1, col=1
+        )
+
+    # Add trace for divergence plot
+    fig.add_trace(
+    go.Scatter(x=divergence_df['Year'], y=divergence_df['Value'], 
+                name='Percentage Divergence', mode='lines+markers'),
+    row=2, col=1
     )
 
-    # Add a little styling
+    # Update layout
     fig.update_layout(
-        font_color="black",
-        title_font_color="black",
-        legend_title_font_color="black",
-        width=700,  
-        height=350  
-        )
-    fig.update_traces(line=dict(width=2, color='black'))
-    
-    divergence_plots_dict[title] = fig.to_html()
+    height=500,
+    width=700,
+    showlegend=True,
+    font_color="black",
+    title_font_color="black",
+    legend_title_font_color="black"
+    )
+
+    # Update y-axes labels
+    fig.update_yaxes(title_text=unit, row=1, col=1)
+    fig.update_yaxes(title_text="% Diff", row=2, col=1)
+    title = f"{flow} - {category}"
+    plots_dict[title] = fig.to_html()
+
+
 
 
 def save_to_sublist(total_data,value,scenario):

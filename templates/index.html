@@ -61,7 +61,6 @@
                <div class="plot-container">
                 <div class="plot-pair">
                     <div class="plot-container" id="total_graph"></div>
-                    <div class="plot-container" id="divergence_graph"></div>
                  </div>
                </div>
            </div>
@@ -111,13 +110,6 @@
        method: 'GET',
        success: function(plotHtml) {
            $('#total_graph').html(plotHtml);
-       }
-   });
-   $.ajax({
-    url: `/get_divergence_plot/${selectedValue} - Percentage Divergence between Stated and Net Zero`,
-       method: 'GET',
-       success: function(plotHtml) {
-           $('#divergence_graph').html(plotHtml);
        },
        error: function(xhr, status, error) {
         console.error("Error:", error);
