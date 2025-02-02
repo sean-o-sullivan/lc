@@ -25,35 +25,25 @@
 
 
 <body>
-    <h1>Select an Option</h1>
+    <h1>testing page...</h1>
 
     <div id=graph1></div>
-            
-            <div id=graph1></div>
-            <div id=graph1></div>
-            <div id=graph1></div>
-
-            <form>
-            <select id="chartChoice" onchange="checkChart(this.value)">
-                <option value="0">Please select a value:</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
-        </form>
-
+    <div id=graph1></div>
+    <div id=graph1></div>
+    <div id=graph1></div>
     
     <!-- Dropdown element -->
     <select id="myDropdown">
         <option value="">Loading...</option>  <!-- Placeholder text -->
     </select>
 
+
     <script>
         // JavaScript to populate the dropdown with data from Flask backend
         $(document).ready(function() {
             // Fetch data from Flask API
             $.ajax({
-                url: '/get_dropdown_data',  // Flask route
+                url: '/get_dropdown_titles',  // Flask route
                 method: 'GET',
                 success: function(data) {
                     // Get the dropdown element
@@ -74,38 +64,21 @@
         });
 
 
+        function update_other_plots(){
 
-        function RunMe(){
+        // Define the divs which will contain the respective plots
+        const totalChart = document.getElementById("graph1");
+        const netZero = document.getElementById("graph1");
+        const announcedPledges = document.getElementById("graph1");
+        const statedPolicies = document.getElementById("graph1");
 
-// Define the divs which will contain the respective plots
-const totalChart = document.getElementById("graph1");
-const netZero = document.getElementById("graph1");
-const announcedPledges = document.getElementById("graph1");
-const statedPolicies = document.getElementById("graph1");
+        const DivergencePlot = document.getElementById("graph1");
+        const DivergenceTable = document.getElementById("graph1");
 
-const DivergencePlot = document.getElementById("graph1");
-const DivergenceTable = document.getElementById("graph1");
+        chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
 
-//need to automate the population of the dropdown when the app starts, based off a post or get from the html page on load
-
-    function checkChart(myValue){
-
-        switch(myValue) {
-            case "1":
-                chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
-                break;
-            case "2":
-                chartDisplay.innerHTML = "Showing Chart <strong>2</strong> now...";
-                break;
-            case "3":
-                chartDisplay.innerHTML = "Showing Chart <strong>3</strong> now...";
-                break;
-            default: 
-                break;
         }
-    }
 
-    
     </script>
 </body>
 </html>
