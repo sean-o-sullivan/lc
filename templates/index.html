@@ -25,10 +25,10 @@
 
 
 <body>
+    <div id=divergence_graph></div>
     <h1>testing page!</h1>
 
     <div id=total_graph></div>
-    <div id=graph1></div>
     <div id=graph1></div>
     <div id=graph1></div>
     
@@ -68,11 +68,23 @@
         $('#myDropdown').on('change', function() {
    const selectedValue = $(this).val();
    $.ajax({
-       url: `/get_plot/${selectedValue}`,
+    url: `/get_total_plot/${selectedValue}`, 
        method: 'GET',
        success: function(plotHtml) {
            $('#total_graph').html(plotHtml);
        }
+   });
+   $.ajax({
+    url: `/get_divergence_plot/${selectedValue} - Percentage Divergence`,
+       method: 'GET',
+       success: function(plotHtml) {
+           $('#divergence_graph').html(plotHtml);
+       },
+       error: function(xhr, status, error) {
+        console.error("Error:", error);
+        console.log("Status:", status);
+        console.log("Response:", xhr.responseText);
+    }
    });
 });
 

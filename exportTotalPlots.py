@@ -35,6 +35,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
     # Create a combined DataFrame
     df = pd.DataFrame()
+    divergence_df = pd.DataFrame()  # For total plot
+
 
     # we have to append 2 nans to the beginning of the announced pledges and net zero projections as they dont have data from 2010 and 2022    
     for i in [1, 2]:
@@ -61,6 +63,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
         df = pd.concat([df, temp_df], ignore_index=True)
 
+
     # Generate plot
     title = f"{flow} - {category}"
     fig = px.line(
@@ -80,10 +83,59 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         legend_title_font_color="black"
     )
 
-    # Save plot
+
+    # Save total plot
     # fig.write_html(f"Total_plot-{title}.html")
     # input('holup!')
     plots_dict[title] = fig.to_html()
+
+
+
+    c=0
+    # % Divergence between what we are actually predicted to do and what we need to do
+    for i in range(len(years)):
+
+        if c > 2:
+            try:
+
+                divergence_temp_df = pd.DataFrame({
+                    'Year': years,
+                    'Value': (total_data[0][i]/total_data[2][i]),
+                    'Category': name 
+                })
+
+            except ZeroDivisionError:
+                divergence_temp_df = pd.DataFrame({
+                    'Year': years,
+                    'Value': None,
+                    'Category': name 
+                })
+        else: 
+            divergence_temp_df = pd.DataFrame({
+                'Year': years,
+                'Value': None,
+                'Category': name 
+            })
+        c+=1
+        divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
+
+    # Generate divergence plot
+    title = f"{flow} - {category} - Percentage Divergence"
+    fig = px.line(
+        divergence_df,
+        x='Year',
+        y='Value',
+        color='Category',
+        title=title,
+        markers=True,
+        labels={'Value': '% Diff'}
+    )
+
+    divergence_plots_dict[title] = fig.to_html()
+    print("Divergence title:", title)
+    divergence_plots_dict[title] = fig.to_html()
+    print("Divergence dict keys:", divergence_plots_dict.keys())
+
 
 
 def save_to_sublist(total_data,value,scenario):
@@ -102,6 +154,7 @@ def save_to_sublist(total_data,value,scenario):
 
 # Stores plot titles & html bundles, this has to be defined globally
 plots_dict = {}
+divergence_plots_dict = {}
 
 def run():
         
