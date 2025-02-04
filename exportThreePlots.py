@@ -36,7 +36,7 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     for i in [1, 2]:
         for j in [0,1]:
             total_data[i][j] = [None, None] + total_data[i][j]
-            
+
 
     # print(f'We are in Flow: {flow}, Here total_data is! {total_data}')
 
@@ -60,13 +60,9 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
         })
 
         stated_df = pd.concat([stated_df, temp_df], ignore_index=True)
-        
-
-
-
 
     # Create subplot figure
-    fig = make_subplots(rows=3, cols=1, 
+    fig = make_subplots(rows=1, cols=1, 
                     shared_xaxes=True,
                     subplot_titles=(f"Stated Policies", 
                                     "Announced Pledges",
@@ -75,27 +71,11 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     )
 
     # Add traces for stated plot
-    for name in total_df['Category'].unique():
-        plot_df = total_df[total_df['Category'] == name]
+    for name in stated_df['Category'].unique():
+        plot_df = stated_df[stated_df['Category'] == name]
         fig.add_trace(
             go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
             row=1, col=1
-        )
-
-    # Add traces for announced plot
-    for name in total_df['Category'].unique():
-        plot_df = total_df[total_df['Category'] == name]
-        fig.add_trace(
-            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
-            row=2, col=1
-        )
-
-    # Add traces for zero plot
-    for name in total_df['Category'].unique():
-        plot_df = total_df[total_df['Category'] == name]
-        fig.add_trace(
-            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
-            row=3, col=1
         )
 
 
@@ -109,6 +89,7 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     legend_title_font_color="black"
     )
 
+
     # Update y-axes labels
     fig.update_yaxes(title_text=unit, row=1, col=1)
     fig.update_yaxes(title_text=unit, row=2, col=1)
@@ -116,6 +97,7 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
 
     title = f"{flow} - {category}"
     plots_dict[title] = fig.to_html()
+    fig.write_html(f"{flow}-{category}-plot.html")
 
 
 def save_to_sublist(total_data,product,value,scenario):
@@ -143,7 +125,7 @@ divergence_plots_dict = {}
 
 def run():
         
-    anti_totalling=False
+    not_totalling=False
     previous_flow=''
     previous_category=''
     previous_flow = df.loc[0,'FLOW']
@@ -151,7 +133,7 @@ def run():
     # Dynamically initialise the totalData list of lists
     total_data = []
 
-    # Outer loop to create 3 sublists -- This is for the three scenarios' total data.
+    # Outer loop to create 3 sublists -- This is for the three scenarios' individual data.
     for _ in range(3):
         total_data.append([[],[]])    
 
@@ -175,9 +157,8 @@ def run():
             # Check if in the total section
             if product != 'Total':
 
-                anti_totalling = True
-                TotalPlotname = f'{flow}'
-                    
+                not_totalling = True
+
                 # Save the specific recorded value to its respective sublist
                 total_data = save_to_sublist(total_data,product,value,scenario)
 
@@ -187,8 +168,8 @@ def run():
                 
 
             # Save the data collected while totalling and make a plot for this 
-            elif anti_totalling:
-                    # print('now saving because we are no longer totaling!')
+            elif not_totalling:
+                    print('now saving because we are no longer totaling!')
 
                     create_3_plots(
                         total_data=total_data,
@@ -199,9 +180,9 @@ def run():
                         line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
                     )
 
-                    anti_totalling=False
+                    not_totalling=False
         else:
-            anti_totalling=False
+            not_totalling=False
 
             # Re-initialise the totalData list of lists
             total_data = []

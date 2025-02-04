@@ -8,39 +8,29 @@
     <link rel="stylesheet" href="../static/css/styles.css">
 </head>
 
-<!-- 
 
-Todo - Explicitly meeting their requirements
-
-// colour blindness accessibility checkbox, 
-// light vs dark mode button, 
-// input range of years
-
-// store data with javascript local storage sessions
- -->
 
 
 <body>
- <div id="content" class="dark-mode-invert">
 
     <nav>
         <div class="nav-container">
             <div class="nav-name">LC 247124</div>
             <ul class="nav-links">
                 <li><a href="../templates/index.html">Home</a></li>
+                <li><a href="../../contact">Documentation</a></li>
                 <li><a href="../../p">Recommendations</a></li>
                 <li><a href="../../about">About</a></li>
             </ul>
         </div>
     </nav>
 
+
     <div class="header-bar">    
-        <h1>International Energy Agency</h1> 
-                
-        <h2  style="font-weight: normal;">Interactive Data-Panel</h2>    
+        <h1>testing page!</h1>          
+        <h2>help!</h2>    
   
     </div>
-    <div style="width: 95%; height: 1px; background-color: rgb(195, 195, 195); margin: 0 auto;"></div>
 
         <div class="split-container">
            <div class="left-half">
@@ -52,28 +42,16 @@ Todo - Explicitly meeting their requirements
            </div>
            <div class="right-half">
 
-            <span>
-                <p>Select data to plot</p>
-                <select id="myDropdown">
-                    <option value="">Loading...</option>
-                </select>
-            </span>
 
-
+               <select id="myDropdown">
+                   <option value="">Loading...</option>
+               </select>
                <div id=graph1></div>
                <div id=graph2></div>
                <div id=graph3></div>
            </div>
         </div>
 
-
-        <div class="filter-buttons">
-            <button onclick="toggleColorblind()">Toggle Colorblind Mode</button>
-            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-        </div>
-    
-        
-    </div>
     <script>
         // JavaScript to populate the dropdown with data from Flask backend
         $(document).ready(function() {
@@ -130,32 +108,6 @@ Todo - Explicitly meeting their requirements
         chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
         }
 
-
-        
-        let isColorblind = false;
-        let isDarkMode = false;
-
-        function updateFilters() {
-            let filters = [];
-            if (isColorblind) filters.push('grayscale(1) sepia(1.1)');
-            if (isDarkMode) filters.push('invert(1) hue-rotate(180deg)');
-
-            document.getElementById('content').style.filter = filters.join(' ');
-        }
-
-        function toggleColorblind() {
-            isColorblind = !isColorblind;
-            updateFilters();
-            event.target.style.backgroundColor = isColorblind ? '#aaa' : '';
-        }
-
-        function toggleDarkMode() {
-            isDarkMode = !isDarkMode;
-            updateFilters();
-            document.body.classList.toggle('dark-mode');
-        }
-
-        
     </script>
 </body>
 </html>

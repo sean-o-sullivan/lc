@@ -97,11 +97,17 @@ def create_total_plot(total_data, unit, flow, category, line_names):
                     vertical_spacing=0.125
 )
 
+    # Define viridis colors
+    viridis_colors = [
+        '#5b01a5',  # Bright Purple
+        '#00cc8f',  # Bright Turquoise
+        '#f77168'   # Bright Orange
+    ]
     # Add traces for total plot
-    for name in total_df['Category'].unique():
+    for i, name in enumerate(total_df['Category'].unique()):
         plot_df = total_df[total_df['Category'] == name]
         fig.add_trace(
-            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
+            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers', line=dict(color=viridis_colors[i], width=2)),
             row=1, col=1
         )
 
@@ -112,14 +118,18 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     row=2, col=1
     )
 
+
     # Update layout
     fig.update_layout(
-    height=500,
+    height=550,
     width=700,
     showlegend=True,
     font_color="black",
     title_font_color="black",
-    legend_title_font_color="black"
+    legend_title_font_color="black",
+    margin=dict(l=20, r=20, t=40, b=20, pad=0),
+    plot_bgcolor='#f8f9fa',   # Light gray for the plot area
+    paper_bgcolor='white'     # White for the surrounding paper
     )
 
     # Update y-axes labels
