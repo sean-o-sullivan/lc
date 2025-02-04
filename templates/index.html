@@ -27,7 +27,7 @@ Todo - Explicitly meeting their requirements
         <div class="nav-container">
             <div class="nav-name">LC 247124</div>
             <ul class="nav-links">
-                <li><a href="../templates/index.html">Home</a></li>
+                <li><a href="../templates/index.html">Graphs</a></li>
                 <li><a href="../../p">Recommendations</a></li>
                 <li><a href="../../about">About</a></li>
             </ul>
@@ -35,7 +35,8 @@ Todo - Explicitly meeting their requirements
     </nav>
 
     <div class="header-bar">    
-        <h1>International Energy Agency</h1> 
+        <h1><a href="https://www.iea.org/reports/world-energy-outlook-2024" target="_blank" rel="noopener noreferrer">IEA</a>
+          - World Energy Outlook 2024</h1> 
                 
         <h2  style="font-weight: normal;">Interactive Data-Panel</h2>    
   
@@ -59,13 +60,13 @@ Todo - Explicitly meeting their requirements
                 </select>
             </span>
 
-
-               <div id=graph1></div>
-               <div id=graph2></div>
-               <div id=graph3></div>
-           </div>
+            <div class="three-scenarios">
+                <div id=graph1></div>
+                <div id=graph2></div>
+                <div id=graph3></div>
+            </div>
         </div>
-
+    </div>
 
         <div class="filter-buttons">
             <button onclick="toggleColorblind()">Toggle Colorblind Mode</button>
@@ -100,13 +101,31 @@ Todo - Explicitly meeting their requirements
         });
 
 
+    function clear_placeholders(){
 
-        $('#myDropdown').on('change', function() {
+    // Change all elements inside .three-scenarios
+    document.querySelectorAll('.three-scenarios > div').forEach(element => {
+        element.style.backgroundColor = 'white';
+        element.style.padding = '0';
+        element.style.margin = '0';
+
+    });
+
+    // Change all .plot-pair elements
+    document.querySelectorAll('.plot-pair > div').forEach(element => {
+        element.style.backgroundColor = 'white';
+        element.style.padding = '0';
+        element.style.margin = '10px';
+    });
+}
+
+    $('#myDropdown').on('change', function() {
    const selectedValue = $(this).val();
    $.ajax({
     url: `/get_total_plot/${selectedValue}`, 
        method: 'GET',
        success: function(plotHtml) {
+            clear_placeholders()
            $('#total_graph').html(plotHtml);
        },
        error: function(xhr, status, error) {

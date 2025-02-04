@@ -18,8 +18,11 @@ body {
     }
     
     .left-half, .right-half {
-       width: 50%;
-       padding: 20px;
+        flex: 0 0 50%; /* Lock each to exactly 50% */
+        max-width: 50%; /* Prevent expansion beyond 50% */
+        box-sizing: border-box;
+        padding: 30px; /* or any fixed padding you like */
+        overflow: auto; /* or hidden, if you want to clip big content */
     }
     
     .plot-container {
@@ -27,11 +30,7 @@ body {
     }
 
 
-.plot-pair {
-display: flex;
-flex-direction: column;
-width: 50%;
-}
+
 
 .plot-container {
 width: 100%;
@@ -59,7 +58,7 @@ padding-bottom: 1%;
 }
 
 .nav-name {
-font-size: 13px;
+font-size: 14px;
 font-weight: normal;
 color: #000000;
 }
@@ -78,7 +77,7 @@ margin-left: 20px;
 .nav-links li a {
 color: #007bff; 
 text-decoration: underline; 
-font-size: 13px;
+font-size: 14px;
 padding-bottom: 5px;
 position: relative;
 }
@@ -103,6 +102,38 @@ body {
     right: 20px;
     display: flex;
     gap: 10px;
+}
+
+
+.filter-buttons > button{
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
     z-index: 1000;
 }
 
+
+
+
+.three-scenarios > div { 
+    background-color: #f5f5f5 !important;
+    margin: 20px 20px;  
+    padding: 20px;  
+    width: auto;
+    height: auto;
+    border-radius: 5px; 
+}
+
+
+.plot-pair > div{
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    margin: 10px; 
+    padding: 250px;
+    width: 100%;        
+    max-width: 100%;  
+    box-sizing: border-box; 
+    height: auto;
+    border-radius: 5px;
+}
