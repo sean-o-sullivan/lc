@@ -62,30 +62,34 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         total_df = pd.concat([total_df, temp_df], ignore_index=True)
         
 
+    # Now we just do raw difference because % difference made a lot of weirdness when the net Zero arrived at 0 for a specific field
     c=0
     # % Divergence between what we are actually predicted to do and what we need to do
     for i in range(len(years)):
 
         if c > 2:
-            try:
+            if (total_data[0][i]-total_data[2][i]) >1:
+                        
                 divergence_temp_df = pd.DataFrame({
                     'Year': [years[i]], 
-                    'Value': [(total_data[0][i]/total_data[2][i])],  
+                    'Value': [(total_data[0][i]-total_data[2][i])],  
+                    'Category': ['Percentage Difference']  
+                })
+            elif (total_data[2][i]-total_data[0][i]) > 1:
+
+                divergence_temp_df = pd.DataFrame({
+                    'Year': [years[i]], 
+                    'Value': [(total_data[2][i]-total_data[0][i])],  
                     'Category': ['Percentage Difference']  
                 })
 
-            except ZeroDivisionError:
-                divergence_temp_df = pd.DataFrame({
-                    'Year': years,
-                    'Value': None,
-                    'Category': name 
-                })
         else: 
             divergence_temp_df = pd.DataFrame({
                 'Year': years,
                 'Value': None,
                 'Category': 'Percentage Difference' 
             })
+
         c+=1
         divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
 
@@ -93,7 +97,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     fig = make_subplots(rows=2, cols=1, 
                     shared_xaxes=True,
                     subplot_titles=(f"Total: {flow} - {category}", 
-                                    "% Divergence between Stated and Net Zero"),
+                                    "Divergence between Stated and Net Zero"),
                     vertical_spacing=0.125
 )
 
@@ -114,7 +118,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     # Add trace for divergence plot
     fig.add_trace(
     go.Scatter(x=divergence_df['Year'], y=divergence_df['Value'], 
-                name='Percentage Divergence', mode='lines+markers', line=dict(color='black', width=2)),
+                name='Total Divergence', mode='lines+markers', line=dict(color='black', width=2)),
     row=2, col=1
     )
 
@@ -134,7 +138,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
     # Update y-axes labels
     fig.update_yaxes(title_text=unit, row=1, col=1)
-    fig.update_yaxes(title_text="% Diff", row=2, col=1)
+    fig.update_yaxes(title_text="Absolute Difference", row=2, col=1)
     title = f"{flow} - {category}"
     plots_dict[title] = fig.to_html()
 
