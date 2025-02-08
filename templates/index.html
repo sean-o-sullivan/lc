@@ -133,8 +133,37 @@ Todo - Explicitly meeting their requirements
        success: function(response) {
         clear_placeholders();
         $('#total_graph').html(response.plotHtml);
-        texts.innerHTML = response.textData;
-       },
+
+           const words = response.textData.split(' ');
+           let numberCount = 0;
+           let emph=false
+
+           const formattedText = words.map((word, index) => {
+               if (!isNaN(parseFloat(word))) {
+                   
+                   if (parseFloat(word) !== 25) {
+                    emph=true
+                    return `<span class="emphasis">${word}</span>`;
+                }   else{
+                    return `<span class="emphasis">${word}</span>`;
+                }
+               } else if (emph) {
+                emph = false;  
+                return `<span class="emphasis">${word}</span>`;
+               }
+
+               return word;
+           }).join(' ');
+           
+        
+
+
+           texts.innerHTML = formattedText;      
+           
+           
+        
+        },
+
        error: function(xhr, status, error) {
         console.error("Error:", error);
         console.log("Status:", status);

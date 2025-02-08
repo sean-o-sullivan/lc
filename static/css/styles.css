@@ -143,3 +143,9 @@ body {
     margin-left: 50px !important;
     margin-top: 30px !important;
 }
+
+.emphasis {
+    font-weight: bold;
+    text-decoration: underline;
+    color: #700000;  /* Using your accent color from the plots */
+}
