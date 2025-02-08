@@ -137,3 +137,9 @@ body {
     height: auto;
     border-radius: 5px;
 }
+
+
+.cooler-text {
+    margin-left: 50px !important;
+    margin-top: 30px !important;
+}

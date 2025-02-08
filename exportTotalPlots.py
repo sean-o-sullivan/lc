@@ -64,6 +64,7 @@ def create_total_plot(total_data, unit, flow, category, line_names):
 
     # Now we just do raw difference because % difference made a lot of weirdness when the net Zero arrived at 0 for a specific field
     c=0
+    fillerDescription=''
     # % Divergence between what we are actually predicted to do and what we need to do
     for i in range(len(years)):
 
@@ -91,6 +92,10 @@ def create_total_plot(total_data, unit, flow, category, line_names):
             })
 
         c+=1
+        print(c)
+        if c == 7:
+            fillerDescription = f'hey hey hey! {flow}'
+
         divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
 
     # Create subplot figure
@@ -141,6 +146,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     fig.update_yaxes(title_text=f"Absolute Difference - {unit}", row=2, col=1)
     title = f"{flow} - {category}"
     plots_dict[title] = fig.to_html()
+    textData[title] = fillerDescription
+
 
 
 
@@ -162,6 +169,7 @@ def save_to_sublist(total_data,value,scenario):
 # Stores plot titles & html bundles, this has to be defined globally
 plots_dict = {}
 divergence_plots_dict = {}
+textData = {}
 
 def run():
         

@@ -49,6 +49,9 @@ Todo - Explicitly meeting their requirements
                 <div class="plot-pair">
                     <div class="plot-container" id="total_graph"></div>
                  </div>
+
+                 <div class="cooler-text"><p id="cool-text"></p></div>
+
                </div>
            </div>
            <div class="right-half">
@@ -121,12 +124,16 @@ Todo - Explicitly meeting their requirements
 
     $('#myDropdown').on('change', function() {
    const selectedValue = $(this).val();
+   const texts = document.getElementById("cool-text")
+
+
    $.ajax({
     url: `/get_total_plot/${selectedValue}`, 
        method: 'GET',
-       success: function(plotHtml) {
-            clear_placeholders()
-           $('#total_graph').html(plotHtml);
+       success: function(response) {
+        clear_placeholders();
+        $('#total_graph').html(response.plotHtml);
+        texts.innerHTML = response.textData;
        },
        error: function(xhr, status, error) {
         console.error("Error:", error);
@@ -135,6 +142,8 @@ Todo - Explicitly meeting their requirements
     }
    });
 });
+
+
         function update_other_plots(){
 
         // Define the divs which will contain the respective plots
