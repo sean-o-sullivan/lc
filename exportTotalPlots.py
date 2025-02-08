@@ -94,7 +94,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
         c+=1
         print(c)
         if c == 7:
-            fillerDescription = f'hey hey hey! {flow}'
+            fillerDescription = f'By 2050, we will be {round(abs((total_data[2][i]-total_data[0][i])),2)}{unit} off-target from making our goal in: {flow}'
+
 
         divergence_df = pd.concat([divergence_df, divergence_temp_df], ignore_index=True)
 
