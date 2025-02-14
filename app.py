@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template
 from exportTotalPlots import run, plots_dict, divergence_plots_dict, textData
+from exportThreePlots import run2, three_plots_dict
 
 app = Flask(__name__)
 
@@ -18,6 +19,14 @@ def get_total_plot(title):
         'textData': textData[title]
     })
 
+
+@app.route('/get_3_plots/<title>')
+def get_total_plot(title):
+    return jsonify({
+        'plotHtml': three_plots_dict[title],
+    })
+
+
 @app.route('/get_divergence_plot/<title>')  
 def get_divergence_plot(title):           
     return divergence_plots_dict[title]
@@ -25,4 +34,5 @@ def get_divergence_plot(title):
 
 if __name__ == '__main__':
    run()
+   run2()
    app.run(debug=True)

@@ -24,14 +24,19 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     - need to update
     """
 
-    # print('create_total_plot called!')
+    # Create dataframes for the 3 scenarios
+    stated_df = pd.DataFrame()  # index 0 
 
-    # Create a combined DataFrame
-    stated_df = pd.DataFrame()
+    #lets get it working for the stated one first.....
     announced_df = pd.DataFrame()
     zero_df = pd.DataFrame()
 
-
+    is_empty = all(not any(sublist) for group in total_data for sublist in group)
+    if is_empty:
+        return
+    
+    print(total_data[0])
+    input('holup')
     # we have to append 2 nans to the beginning of the announced pledges and net zero projections as they dont have data from 2010 and 2022    
     for i in [1, 2]:
         for j in [0,1]:
@@ -47,10 +52,6 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     # This is constant throughout the dataset
     years = [2010, 2022, 2023, 2030, 2035, 2040, 2050]
 
-    # print(f'the years are {years}')
-    # print(len(years))
-
-
     for name, values in zip(line_names, total_data):
         temp_df = pd.DataFrame({
             'Year': years,
@@ -60,6 +61,7 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
         })
 
         stated_df = pd.concat([stated_df, temp_df], ignore_index=True)
+
 
     # Create subplot figure
     fig = make_subplots(rows=1, cols=1, 
@@ -71,12 +73,16 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     )
 
     # Add traces for stated plot
-    for name in stated_df['Category'].unique():
-        plot_df = stated_df[stated_df['Category'] == name]
-        fig.add_trace(
-            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers'),
-            row=1, col=1
-        )
+    for cat in stated_df['Category'].unique():
+        cat_df = stated_df[stated_df['Category'] == name]
+
+        for prod in cat_df['Product'].unique(): 
+                prod_df = cat_df[cat_df['Product'] == product] 
+
+                fig.add_trace(
+                    go.Scatter(x=prod_df['Year'], y=prod_df['Value'], name=name, mode='lines+markers'),
+                    row=1, col=1
+                )
 
 
     # Update layout
@@ -89,17 +95,17 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
     legend_title_font_color="black"
     )
 
-
     # Update y-axes labels
     fig.update_yaxes(title_text=unit, row=1, col=1)
     fig.update_yaxes(title_text=unit, row=2, col=1)
     fig.update_yaxes(title_text=unit, row=3, col=1)
 
     title = f"{flow} - {category}"
-    plots_dict[title] = fig.to_html()
+    three_plots_dict[title] = fig.to_html()
     fig.write_html(f"{flow}-{category}-plot.html")
 
 
+# This includes both the value recorded for each scenario and the product also, allowing us to make the multiple streams
 def save_to_sublist(total_data,product,value,scenario):
 
     # Save the specific recorded value to its respective sublist
@@ -118,14 +124,13 @@ def save_to_sublist(total_data,product,value,scenario):
     return total_data
 
 
-
 # Stores plot titles & html bundles, this has to be defined globally
-plots_dict = {}
-divergence_plots_dict = {}
+three_plots_dict = {}
+divergence_three_plots_dict = {}
 
-def run():
+
+def run2():
         
-    not_totalling=False
     previous_flow=''
     previous_category=''
     previous_flow = df.loc[0,'FLOW']
@@ -135,8 +140,7 @@ def run():
 
     # Outer loop to create 3 sublists -- This is for the three scenarios' individual data.
     for _ in range(3):
-        total_data.append([[],[]])    
-
+        total_data.append([[],[]])   
 
     for index, _ in df.iterrows():    
 
@@ -148,53 +152,39 @@ def run():
         category = df.loc[index, 'CATEGORY'] 
 
         # Actual data
-        year = df.loc[index, 'YEAR'] 
         value = df.loc[index, 'VALUE'] 
                     
 
         if (previous_flow.lower() == flow.lower()) and (previous_category.lower() == category.lower()):
 
             # Check if in the total section
-            if product != 'Total':
+            if product == 'Total':
+                continue
 
-                not_totalling = True
-
+            else:
+                    
                 # Save the specific recorded value to its respective sublist
                 total_data = save_to_sublist(total_data,product,value,scenario)
 
-                # print(f'''the value we just tried to append was {value}
-                #         appending to {scenario}, heres it: {total_data}'''
-                #     )
-                
+                # Save the data collected 
+                create_3_plots(
+                    total_data=total_data,
+                    unit=unit,
+                    product=product,
+                    flow=flow,
+                    category=category,
+                    line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
+                )
 
-            # Save the data collected while totalling and make a plot for this 
-            elif not_totalling:
-                    print('now saving because we are no longer totaling!')
+                # Dynamically initialise the totalData list of lists
+                total_data = []
 
-                    create_3_plots(
-                        total_data=total_data,
-                        unit=unit,
-                        product=product,
-                        flow=flow,
-                        category=category,
-                        line_names=['Stated Policies Scenario','Announced Pledges Scenario','Net Zero Emissions by 2050 Scenario']
-                    )
+                # Outer loop to create 3 sublists -- This is for the three scenarios' individual data.
+                for _ in range(3):
+                    total_data.append([[],[]])   
 
-                    not_totalling=False
-        else:
-            not_totalling=False
-
-            # Re-initialise the totalData list of lists
-            total_data = []
-
-            # Outer loop to create 3 sublists -- This is for the three scenarios' total data.
-            for _ in range(3):
-                total_data.append([[],[]])    
-
-            # This is for when the flow changes and we encounter the first total value of that next flow
-            total_data = save_to_sublist(total_data,product,value,scenario)
+                # This is for when the flow changes and we encounter the first total value of that next flow
+                total_data = save_to_sublist(total_data,value,scenario)
 
         previous_flow=flow
         previous_category=category
-
-run()
