@@ -23,7 +23,7 @@ def get_total_plot(title):
 @app.route('/get_3_plots/<title>')
 def get_total_plot(title):
     return jsonify({
-        'plotHtml': three_plots_dict[title],
+        'threePlotHtml': three_plots_dict[title],
     })
 
 
@@ -33,6 +33,8 @@ def get_divergence_plot(title):
 
 
 if __name__ == '__main__':
+   # generates the total plots
    run()
+   # generates the three plots
    run2()
    app.run(debug=True)
