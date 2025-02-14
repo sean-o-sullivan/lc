@@ -62,12 +62,9 @@ Todo - Explicitly meeting their requirements
                     <option value="">Loading...</option>
                 </select>
             </span>
-
-            <div class="three-scenarios">
-                <div id=graph1></div>
-                <div id=graph2></div>
-                <div id=graph3></div>
-            </div>
+                <div class="plot-container">
+                    <div class="plot-container" id="three_graph"></div>
+                </div>
         </div>
     </div>
 
@@ -104,6 +101,7 @@ Todo - Explicitly meeting their requirements
         });
 
 
+    
     function clear_placeholders(){
 
     // Change all elements inside .three-scenarios
@@ -127,16 +125,19 @@ Todo - Explicitly meeting their requirements
    const texts = document.getElementById("cool-text")
 
 
+
    $.ajax({
     url: `/get_total_plot/${selectedValue}`, 
        method: 'GET',
        success: function(response) {
         clear_placeholders();
         $('#total_graph').html(response.plotHtml);
+        $('#three_graph').html(response.threePlotHtml);
 
            const words = response.textData.split(' ');
            let numberCount = 0;
            let emph=false
+
 
            const formattedText = words.map((word, index) => {
                if (!isNaN(parseFloat(word))) {
@@ -167,22 +168,11 @@ Todo - Explicitly meeting their requirements
 });
 
 
-        function update_other_plots(){
-
-        // Define the divs which will contain the respective plots
-        const totalChart = document.getElementById("graph1");
-        const netZero = document.getElementById("graph1");
-        const announcedPledges = document.getElementById("graph1");
-        const statedPolicies = document.getElementById("graph1");
-
-        const DivergencePlot = document.getElementById("graph1");
-        const DivergenceTable = document.getElementById("graph1");
-
-        chartDisplay.innerHTML = "Showing Chart <strong>1</strong> now...";
-        }
 
 
-        
+
+
+        // colourblind and darkmode functionality  
         let isColorblind = false;
         let isDarkMode = false;
 

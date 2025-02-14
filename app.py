@@ -14,15 +14,14 @@ def get_titles():
 
 @app.route('/get_total_plot/<title>')
 def get_total_plot(title):
+    if title not in plots_dict:
+        return jsonify({'error': 'Title not found in plots_dict'}), 404
+    if title not in three_plots_dict:
+        return jsonify({'error': 'Title not found in three_plots_dict'}), 404
+        
     return jsonify({
         'plotHtml': plots_dict[title],
-        'textData': textData[title]
-    })
-
-
-@app.route('/get_3_plots/<title>')
-def get_total_plot(title):
-    return jsonify({
+        'textData': textData[title],
         'threePlotHtml': three_plots_dict[title],
     })
 
@@ -33,8 +32,17 @@ def get_divergence_plot(title):
 
 
 if __name__ == '__main__':
-   # generates the total plots
-   run()
-   # generates the three plots
-   run2()
-   app.run(debug=True)
+
+    # generates the total plots
+    run()
+    # print("Total plots generated:", len(plots_dict))
+        
+    # generates the three plots
+    run2()
+    # print("Three plots generated:", len(three_plots_dict))
+        
+    # Print some keys to compare
+    # print("Plot dict keys:", list(plots_dict.keys())[:3])
+    # print("Three plot dict keys:", list(three_plots_dict.keys())[:3])
+
+    app.run(debug=True)
