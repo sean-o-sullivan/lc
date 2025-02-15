@@ -3,6 +3,7 @@ import plotly.express as px
 import pandas as pd
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import plotly.colors as pc
 
 
 # ______________________________________________________ #
@@ -15,6 +16,19 @@ import plotly.graph_objects as go
 
 
 df = pd.read_csv("cleanedGlobal.csv")
+
+
+# Define a color mapping for each product
+color_palette = pc.qualitative.Plotly_r 
+product_color_map = {}
+
+# Ensures each product has a consistent color across all plots.
+def get_product_color(product):
+
+    if product not in product_color_map:
+        product_color_map[product] = color_palette[len(product_color_map) % len(color_palette)]
+    return product_color_map[product]
+
 
 
 def create_3_plots(total_data, unit, product, flow, category, line_names):
@@ -65,6 +79,26 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
                 textangle=-45,
                 opacity=0.5
             )
+
+        # Update 
+        fig.update_layout(
+        height=575,
+        width=725,
+        showlegend=True,
+        font_color="black",
+        title_font_color="black",
+        legend_title_font_color="black",
+        margin=dict(l=20, r=20, t=40, b=20, pad=0),
+        plot_bgcolor='#f8f9fa',   
+        paper_bgcolor='white'     
+        )
+
+        fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
+        fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
+
+        fig.update_yaxes(title_text=unit, row=1, col=1)
+        fig.update_yaxes(title_text=unit, row=2, col=1)
+        fig.update_yaxes(title_text=unit, row=3, col=1)
 
         clean_category = category.split(',')[0].strip()
         title = f"{flow.strip()} - {clean_category}"
@@ -128,14 +162,16 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
                             x=prod_df['Year'], 
                             y=prod_df['Value'], 
                             name=f"{prod}", 
-                            mode='lines+markers'
+                            mode='lines+markers',
+                            line=dict(color=get_product_color(prod)),  
+                            showlegend=(i == 1)  # only show legend for the first subplot
                         ),
                         row=i, col=1
                     )
 
     # Update 
     fig.update_layout(
-    height=575,
+    height=575, 
     width=725,
     showlegend=True,
     font_color="black",
