@@ -116,14 +116,35 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     for i, name in enumerate(total_df['Category'].unique()):
         plot_df = total_df[total_df['Category'] == name]
         fig.add_trace(
-            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], name=name, mode='lines+markers', line=dict(color=viridis_colors[i], width=2)),
+            go.Scatter(x=plot_df['Year'], y=plot_df['Value'], 
+                       name=name, mode='lines+markers', 
+                       line=dict(color=viridis_colors[i], 
+                                 width=2),
+                        hovertemplate=(
+                        "<b>%{text}</b><br>"  
+                        "Year: %{x}<br>"
+                        "Value: %{y:,.2f} " + unit + "<br>"  
+                        "<extra></extra>"  
+                            ),
+
+                    text=[name] * len(name)  
+                        ),
             row=1, col=1
         )
 
     # Add trace for divergence plot
+    filla="Absolute Difference"
     fig.add_trace(
     go.Scatter(x=divergence_df['Year'], y=divergence_df['Value'], 
-                name='Total Divergence', mode='lines+markers', line=dict(color='black', width=2)),
+                name='Total Divergence', mode='lines+markers', line=dict(color='black', width=2),
+                hovertemplate=(
+                        "<b>%{text}</b><br>"  
+                        "Year: %{x}<br>"
+                        "Value: %{y:,.2f} " + unit + "<br>"  
+                        "<extra></extra>"  
+                        ),
+                text=[filla] * len(divergence_df)
+                    ),
     row=2, col=1
     )
 

@@ -164,7 +164,15 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
                             name=f"{prod}", 
                             mode='lines+markers',
                             line=dict(color=get_product_color(prod)),  
-                            showlegend=(i == 1)  # only show legend for the first subplot
+                            showlegend=(i == 1),  # only show legend for the first subplot
+
+                            hovertemplate=(
+                        "<b>%{text}</b><br>" 
+                        "Year: %{x}<br>"
+                        "Value: %{y:,.2f} " + unit + "<br>"  
+                        "<extra></extra>"  
+                            ),
+                    text=[prod] * len(prod_df)  
                         ),
                         row=i, col=1
                     )
