@@ -144,7 +144,8 @@ def create_total_plot(total_data, unit, flow, category, line_names):
     # Update y-axes labels
     fig.update_yaxes(title_text=unit, row=1, col=1)
     fig.update_yaxes(title_text=f"Absolute Difference - {unit}", row=2, col=1)
-    title = f"{flow} - {category}"
+    clean_category = category.split(',')[0].strip()
+    title = f"{flow.strip()} - {clean_category}"
     plots_dict[title] = fig.to_html()
     textData[title] = fillerDescription
 

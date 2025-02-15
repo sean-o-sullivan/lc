@@ -21,7 +21,9 @@ body {
         flex: 0 0 50%; /* Lock each to exactly 50% */
         max-width: 50%; /* Prevent expansion beyond 50% */
         box-sizing: border-box;
-        padding: 30px; /* or any fixed padding you like */
+        padding: 0px; /* or any fixed padding you like */
+        padding-left: 30px;
+        padding-right: 30px;
         overflow: auto; /* or hidden, if you want to clip big content */
     }
     
@@ -43,6 +45,7 @@ justify-content: space-between;
 align-items: center;
 padding-left: 2%;
 padding-right: 2%;
+padding-bottom: 0px;
 }
 
 
@@ -149,3 +152,4 @@ body {
     text-decoration: underline;
     color: #700000;  /* Using your accent color from the plots */
 }
+
