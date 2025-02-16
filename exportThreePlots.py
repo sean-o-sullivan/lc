@@ -73,10 +73,10 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
                 y=1.5,
                 xref=f"x{i}",
                 yref=f"y{i}",
-                text="N/A",
+                text="No Relecvant Data (N/A)",
                 showarrow=False,
                 font=dict(size=50, color='gray'),
-                textangle=-45,
+                textangle=0,
                 opacity=0.5
             )
 

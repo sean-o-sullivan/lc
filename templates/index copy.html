@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LC Computer Science Project - 247124</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+
+<!-- 
+
+Todo - Explicitly meeting their requirements
+
+ 
+// input range of years
+//
+//
+//
+
+// store data with javascript local storage sessions
+ -->
+
+
+<body>
+ <div id="content" class="dark-mode-invert">
+
+    <nav>
+        <div class="nav-container">
+            <div class="nav-name">LC 247124</div>
+            <ul class="nav-links">
+                <li><a href="../templates/index.html">Graphs</a></li>
+                <li><a href="../../p">Recommendations</a></li>
+                <li><a href="../../about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="header-bar">    
+        <h1><a href="https://www.iea.org/reports/world-energy-outlook-2024" target="_blank" rel="noopener noreferrer">IEA</a>
+          - World Energy Outlook 2024</h1> 
+                
+        <h2  style="font-weight: normal;">Interactive Data-Panel</h2>    
+  
+    </div>
+    <div style="width: 95%; height: 1px; background-color: rgb(195, 195, 195); margin: 0 auto;"></div>
+
+        <div class="split-container">
+           <div class="left-half">
+                <div class="title-container"><h2>Total Global Data</h2></div>
+
+               <div class="plot-container">
+                <div class="plot-pair">
+                    <div class="plot-container" id="total_graph"></div>
+                 </div>
+
+                 <div class="cooler-text"><p id="cool-text"></p></div>
+
+               </div>
+           </div>
+           <div class="right-half">
+            <div class="title-container"><h2>Three Scenarios, Global </h2></div>
+            <span>
+                <p>Select data to plot</p>
+                <select id="myDropdown">
+                    <option value="">Loading...</option>
+                </select>
+            </span>
+                <div class="plot-container">
+                    <div class="plot-container" id="three_graph"></div>
+                </div>
+        </div>
+    </div>
+    
+    <div class="bottom-section">
+        <h1>↓</h1>
+        <div class="filter-buttons">
+            <button onclick="toggleColorblind()">Toggle Colorblind Mode</button>
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+    </div>
+    
+        
+    </div>
+    <script>
+        // JavaScript to populate the dropdown with data from Flask backend
+        $(document).ready(function() {
+            // Fetch data from Flask API
+            $.ajax({
+                url: '/get_dropdown_titles',  // Flask route
+                method: 'GET',
+                success: function(data) {
+                    // Get the dropdown element
+                    const dropdown = $('#myDropdown');
+
+                    // Clear the dropdown first
+                    dropdown.empty();
+
+                    // Iterate over the returned data and append options
+                    data.forEach(function(item) {
+                        dropdown.append(new Option(item, item));
+                    });
+                },
+                error: function() {
+                    console.error('Failed to load dropdown data');
+                }
+            });
+        });
+
+
+    
+    function clear_placeholders(){
+
+    // Change all elements inside .three-scenarios
+    document.querySelectorAll('.three-scenarios > div').forEach(element => {
+        element.style.backgroundColor = 'white';
+        element.style.padding = '0';
+        element.style.margin = '0';
+
+    });
+
+    // Change all .plot-pair elements
+    document.querySelectorAll('.plot-pair > div').forEach(element => {
+        element.style.backgroundColor = 'white';
+        element.style.padding = '0';
+        element.style.margin = '10px';
+    });
+}
+
+    $('#myDropdown').on('change', function() {
+   const selectedValue = $(this).val();
+   const texts = document.getElementById("cool-text")
+
+
+
+   $.ajax({
+       url: '/get_total_plot/' + encodeURIComponent(selectedValue),
+       method: 'GET',
+       success: function(response) {
+        clear_placeholders();
+        $('#total_graph').html(response.plotHtml);
+        $('#three_graph').html(response.threePlotHtml);
+
+           const words = response.textData.split(' ');
+           let numberCount = 0;
+           let emph=false
+
+
+           const formattedText = words.map((word, index) => {
+               if (!isNaN(parseFloat(word))) {
+                   
+                   if (parseFloat(word) !== 25) {
+                    emph=true
+                    return `<span class="emphasis">${word}</span>`;
+                }   else{
+                    return `<span class="emphasis">${word}</span>`;
+                }
+               } else if (emph) {
+                emph = false;  
+                return `<span class="emphasis">${word}</span>`;
+               }
+               return word;
+           }).join(' ');
+           
+           texts.innerHTML = formattedText;      
+           
+        },
+
+       error: function(xhr, status, error) {
+        console.error("Error:", error);
+        console.log("Status:", status);
+        console.log("Response:", xhr.responseText);
+    }
+   });
+});
+
+
+
+
+
+
+        // colourblind and darkmode functionality  
+        let isColorblind = false;
+        let isDarkMode = false;
+
+        function updateFilters() {
+            let filters = [];
+            if (isColorblind) filters.push('grayscale(1) sepia(1.1)');
+            if (isDarkMode) filters.push('invert(1) hue-rotate(180deg)');
+
+            document.getElementById('content').style.filter = filters.join(' ');
+        }
+
+        function toggleColorblind() {
+            isColorblind = !isColorblind;
+            updateFilters();
+            event.target.style.backgroundColor = isColorblind ? '#aaa' : '';
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            updateFilters();
+            document.body.classList.toggle('dark-mode');
+        }
+
+        
+    </script>
+</body>
+</html>

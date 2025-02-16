@@ -3,6 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    position: relative;
     background-color: #ffffff;
 }
 .container {
@@ -16,6 +17,13 @@ body {
     .split-container {
        display: flex;
     }
+
+    .first-page {
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+    }
+
     
     .left-half, .right-half {
         flex: 0 0 50%; /* Lock each to exactly 50% */
@@ -32,6 +40,11 @@ body {
     }
 
 
+    .bottom-section {
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 0;
+     }
 
 
 .plot-container {
@@ -43,8 +56,8 @@ margin-bottom: 10px;
 display: flex;
 justify-content: space-between;
 align-items: center;
-padding-left: 2%;
-padding-right: 2%;
+padding-left: 2.5%;
+padding-right: 2.5%;
 padding-bottom: 0px;
 }
 
@@ -131,7 +144,7 @@ body {
 .plot-pair > div{
     display: flex;
     flex-direction: column;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     margin: 10px; 
     padding: 250px;
     width: 100%;        
@@ -153,3 +166,78 @@ body {
     color: #700000;  /* Using your accent color from the plots */
 }
 
+
+
+
+
+#sd-container {
+    position: fixed;
+    bottom: 20px;  /* Increased bottom spacing for better visibility */
+    left: 50%;
+    transform: translateY(-50%);
+}
+
+.arrow {
+    position: relative;
+    width: 60px;  /* Increased from 42px for a wider arrow */
+    height: 5px;  /* Increased from 10px for more vertical space */
+    opacity: 0;
+}
+
+.arrow::before,
+.arrow::after {
+    content: "";
+    width: 27.5px;  /* Increased from 15px for longer arrow lines */
+    height: 3px;  /* Increased from 2px for thicker arrow lines */
+    background-color: #000000;
+    border-radius: 4px;  /* Increased radius for smoother appearance */
+    display: inline-block;
+    position: absolute;  /* Added for better positioning */
+}
+
+.arrow::before {
+    transform: rotate(45deg) translateX(35%);  /* Adjusted translation for new size */
+    left: 0;
+}
+
+.arrow::after {
+    transform: rotate(-45deg) translateX(-35%);  /* Adjusted translation for new size */
+    right: 0;
+}
+
+.arrow:nth-child(1) {
+    top: -50px;
+    opacity: 1;
+    animation: arrow2 1s ease 0s infinite;
+}
+
+@keyframes arrow2 {
+    0% {
+        opacity: 0;
+        top: -20px;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        top: -5px;
+    }
+}
+
+.survey_box {
+    margin: 0;
+    margin-top: 20px;
+    padding: 0;
+}
+
+
+.input-holder {
+    display: flex;
+    justify-content: center; /* Center the child items within the flex container */
+    gap: 10px;
+    margin: 0 auto;          /* Center the container itself horizontally */
+    padding: 0;
+    height: min-content;
+    width: 700px; /* Note: typically you'd use a width in px, %, or vw for horizontal sizing */
+  }
