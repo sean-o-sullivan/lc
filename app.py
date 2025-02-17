@@ -19,7 +19,7 @@ def get_titles():
 def appendData():
     data = request.get_json()
     with open('responses.csv', 'a', newline='\n') as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
         writer.writerow([
             data['age'],
             data['gender'],
