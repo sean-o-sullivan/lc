@@ -15,8 +15,9 @@ body {
 }
 
     .split-container {
-       display: flex;
+        display: flex;
     }
+    
 
     .first-page {
         padding: 0;
@@ -34,6 +35,36 @@ body {
         padding-right: 30px;
         overflow: auto; /* or hidden, if you want to clip big content */
     }
+
+
+
+
+    .split {
+        height: 100%;
+        width: 50%;
+        z-index: 1;
+        top: 0;
+        float: left;
+        overflow-x: hidden;
+        padding-top: 20px;
+      }
+      
+      /* Control the left side */
+      .left {
+        
+        left: 0;
+text-align: left;     
+margin-left: 4%; 
+}
+      
+      /* Control the right side */
+      .right {
+        right: 0;
+      }
+
+      
+
+
     
     .plot-container {
        margin-bottom: 20px;
@@ -42,9 +73,15 @@ body {
 
     .bottom-section {
         margin-bottom: 20px;
+        height: 80vh;
         text-align: center;
         padding: 0;
      }
+
+
+.spacer{
+    height:20px;
+}
 
 
 .plot-container {
@@ -232,12 +269,21 @@ body {
 }
 
 
+
 .input-holder {
     display: flex;
-    justify-content: center; /* Center the child items within the flex container */
+    justify-content: left; /* Center the child items within the flex container */
     gap: 10px;
     margin: 0 auto;          /* Center the container itself horizontally */
     padding: 0;
     height: min-content;
     width: 700px; /* Note: typically you'd use a width in px, %, or vw for horizontal sizing */
   }
+
+.enterForm{
+    width: 20%; 
+    font-size: 15px; 
+    color:white; 
+    border-radius: 5px; 
+    background-color: rgb(60, 60, 60);
+}

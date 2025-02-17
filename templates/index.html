@@ -90,39 +90,137 @@ Todo - Explicitly meeting their requirements
 
             
         <!-- Survey Form -->
-      <form id="survey-form" method="POST" action="/submit_survey">
-        <div class="input-holder">
-          <label for="age">Age:</label>
-          <input type="number" id="age" name="age" min="0" step="1" required>
 
-          <label for="gender">Gender:</label>
-          <select id="gender" name="gender" required>
-            <option value="">Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+    <div class="split-container">
 
-          <label for="netzero">
-            Do you think we are going to reach Net-Zero in 2050?
-          </label>
-          <select id="netzero" name="netzero" required>
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-          
+      <div class="split left">
+
+        <form id="survey-form" method="POST" action="/submit_survey">
+
+            <div>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="0" step="1" required>
+            </div>
+            
+            <div>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div>
             <label for="comments">Additional Comments:</label>
-            <textarea id="comments" name="comments" rows="1" cols="50"></textarea>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
+            <textarea id="comments" name="comments" rows="1" cols="10"></textarea>
+          </div>
+        <div class="spacer"></div>
+
+          <div>
+            <label for="netzero">
+              Do you think we are going to reach Net-Zero in 2050?
+            </label>
+            <select id="netzero" name="netzero" required>
+              <option value="">Select</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+            </div>
+            <div class="spacer"></div>
+
+<div>
+<label for="climate_impact">
+ How concerned are you about climate change's impact on your life?
+</label>
+<select id="climate_impact" name="climate_impact" required>
+<option value="">Select</option>
+<option value="very">Very Concerned</option>
+<option value="somewhat">Somewhat Concerned</option>
+<option value="not">Not Concerned</option>
+</select>
 </div>
 
+<div class="spacer"></div>
+
+<div>
+<label for="renewable_energy">
+ Do you believe renewable energy can fully replace fossil fuels by 2060?
+</label>
+<select id="renewable_energy" name="renewable_energy" required>
+<option value="">Select</option>
+<option value="yes">Yes</option>
+<option value="no">No</option>
+</select>
+</div>
+<div class="spacer"></div>
+
+<div>
+  <label for="policy_support">
+   Would you support stricter government policies to reduce carbon emissions?
+  </label>
+  <select id="policy_support" name="policy_support" required>
+  <option value="">Select</option>
+  <option value="yes">Yes</option>
+  <option value="no">No</option>
+  </select>
+  </div>
+
+<div class="spacer"></div>
+
+<div>
+<label for="lifestyle_change">
+ Are you willing to make major lifestyle changes to reduce your carbon footprint?
+</label>
+<select id="lifestyle_change" name="lifestyle_change" required>
+<option value="">Select</option>
+<option value="yes">Yes</option>
+<option value="no">No</option>
+</select>
+</div>
+
+<button class="enterForm" type="submit">Submit</button>
+</form>
+
+<div class="spacer"></div>
+          </div>
+    </div>
+
+    <div class="split right">
+
+        <div class="liveplots"></div>
+      </div>
+    </div>
+    </div>
+</div>
         
     </div>
         <script>
+
+document.getElementById('survey-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const formObject = Object.fromEntries(formData);
+  updateSurveyData(formObject);
+  this.reset();
+});
+
+function updateSurveyData(formObject){
+  $.ajax({
+    url: '/appendSurveyData',
+    method: 'POST',
+    data: JSON.stringify(formObject),
+    contentType: 'application/json',
+    success: function(data) {
+      console.log('worked!')
+    },
+    error: function(error) {
+      console.error('Failed:', error);
+    }
+  });
+}
+
           $(document).ready(function() {
       
             // Fetch data from Flask API and populate the dropdown
@@ -177,7 +275,7 @@ Todo - Explicitly meeting their requirements
       
           function fillPlots(){
 
-            const selectedValue = $('#myDropdown').val(); // FIX: Correct reference to dropdown
+            const selectedValue = $('#myDropdown').val();
             const texts = document.getElementById("cool-text");
       
             $.ajax({
@@ -213,7 +311,7 @@ Todo - Explicitly meeting their requirements
           }
       
           
-          function isNavbarVisible() {
+function isNavbarVisible() {
     const navbar = document.querySelector('.nav-container');
     const rect = navbar.getBoundingClientRect();
     return rect.top >= 0 && rect.bottom <= window.innerHeight;

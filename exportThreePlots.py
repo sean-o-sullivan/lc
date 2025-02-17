@@ -69,13 +69,13 @@ def create_3_plots(total_data, unit, product, flow, category, line_names):
 
         for i in [1, 2, 3]:
             fig.add_annotation(
-                x=1,
+                x=2,
                 y=1.5,
                 xref=f"x{i}",
                 yref=f"y{i}",
-                text="No Relecvant Data (N/A)",
+                text="No Relevant Data (N/A)",
                 showarrow=False,
-                font=dict(size=50, color='gray'),
+                font=dict(size=30, color='gray'),
                 textangle=0,
                 opacity=0.5
             )

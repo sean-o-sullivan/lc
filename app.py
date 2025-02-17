@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, render_template
 from exportTotalPlots import run, plots_dict, divergence_plots_dict, textData
 from exportThreePlots import run2, three_plots_dict
+from flask import request, jsonify
+import csv
 
 app = Flask(__name__)
 
@@ -11,6 +13,26 @@ def index():
 @app.route('/get_dropdown_titles')
 def get_titles():
    return jsonify(sorted(list(plots_dict.keys())))
+
+
+@app.route('/appendSurveyData', methods=['POST'])
+def appendData():
+    data = request.get_json()
+    with open('responses.csv', 'a', newline='\n') as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            data['age'],
+            data['gender'],
+            data['comments'],
+            data['netzero'],
+            data['climate_impact'],
+            data['renewable_energy'],
+            data['policy_support'], 
+            data['lifestyle_change']
+        ])
+    return jsonify({'status': 'success'})
+
+
 
 @app.route('/get_total_plot/<title>')
 def get_total_plot(title):
