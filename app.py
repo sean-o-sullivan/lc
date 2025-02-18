@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, render_template
 from exportTotalPlots import run, plots_dict, divergence_plots_dict, textData
 from exportThreePlots import run2, three_plots_dict
+from surveyPlots import create_survey_plot
 from flask import request, jsonify
 import csv
 
@@ -49,8 +50,15 @@ def get_total_plot(title):
 
 
 @app.route('/get_divergence_plot/<title>')  
-def get_divergence_plot(title):           
+def get_divergence_plot(title):      
+         
     return divergence_plots_dict[title]
+
+
+
+@app.route('/get_survey_plot/<title>')  
+def get_survey_plot():  
+    return create_survey_plot()
 
 
 if __name__ == '__main__':

@@ -146,18 +146,6 @@ Todo - Explicitly meeting their requirements
 <div class="spacer"></div>
 
 <div>
-<label for="renewable_energy">
- Do you believe renewable energy can fully replace fossil fuels by 2060?
-</label>
-<select id="renewable_energy" name="renewable_energy" required>
-<option value="">Select</option>
-<option value="yes">Yes</option>
-<option value="no">No</option>
-</select>
-</div>
-<div class="spacer"></div>
-
-<div>
   <label for="policy_support">
    Would you support stricter government policies to reduce carbon emissions?
   </label>
@@ -198,24 +186,48 @@ Todo - Explicitly meeting their requirements
           </div>
     </div>
 
-    <div class="split right">
-
-        <div class="liveplots"></div>
+      <div class="split right">
+          <div class="survey-plots"></div>
       </div>
     </div>
-    </div>
+  </div>
 </div>
         
     </div>
         <script>
+
 
 document.getElementById('survey-form').addEventListener('submit', function(e) {
   e.preventDefault();
   const formData = new FormData(this);
   const formObject = Object.fromEntries(formData);
   updateSurveyData(formObject);
+  survey_plots();
   this.reset();
 });
+
+
+
+   
+function survey_plots(){
+
+$.ajax({
+  url: '/get_survey_plot/',
+  method: 'GET',
+  success: function(response) {
+    clear_placeholders();
+    $('#survey-plots').html(response.plotHtml);
+  },
+  error: function(xhr, status, error) {
+    console.error("Error:", error);
+    console.log("Status:", status);
+    console.log("Response:", xhr.responseText);
+  }
+});
+}
+
+
+
 
 function updateSurveyData(formObject){
   $.ajax({
@@ -232,7 +244,8 @@ function updateSurveyData(formObject){
   });
 }
 
-          $(document).ready(function() {
+
+  $(document).ready(function() {
       
             // Fetch data from Flask API and populate the dropdown
             $.ajax({
@@ -258,6 +271,7 @@ function updateSurveyData(formObject){
       
                 // Call fillPlots() after setting the default value
                 fillPlots();
+                survey_plots();
               },
               error: function() {
                 console.error('Failed to load dropdown data');
@@ -284,7 +298,7 @@ function updateSurveyData(formObject){
             });
           }
       
-          function fillPlots(){
+  function fillPlots(){
 
             const selectedValue = $('#myDropdown').val();
             const texts = document.getElementById("cool-text");
