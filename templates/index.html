@@ -187,7 +187,9 @@ Todo - Explicitly meeting their requirements
     </div>
 
       <div class="split right">
-          <div class="survey-plots"></div>
+        <div class="survey-plots-bar"></div>
+        <div class="survey-plots-pie"></div>
+        <div class="survey-plots-cloud"></div>
       </div>
     </div>
   </div>
@@ -207,16 +209,15 @@ document.getElementById('survey-form').addEventListener('submit', function(e) {
 });
 
 
-
-   
 function survey_plots(){
 
 $.ajax({
   url: '/get_survey_plot/',
   method: 'GET',
   success: function(response) {
-    clear_placeholders();
-    $('#survey-plots').html(response.plotHtml);
+    $('#survey-plots-bar').html(response.bar);
+    $('#survey-plots-pie').html(response.pie);
+    $('#survey-plots-word').html(response.cloud);
   },
   error: function(xhr, status, error) {
     console.error("Error:", error);
@@ -227,8 +228,6 @@ $.ajax({
 }
 
 
-
-
 function updateSurveyData(formObject){
   $.ajax({
     url: '/appendSurveyData',
@@ -237,16 +236,16 @@ function updateSurveyData(formObject){
     contentType: 'application/json',
     success: function(data) {
       console.log('worked!')
+      survey_plots()
     },
     error: function(error) {
-      console.error('Failed:', error);
+      console.error('SurveysFailed:', error);
     }
   });
 }
 
 
   $(document).ready(function() {
-      
             // Fetch data from Flask API and populate the dropdown
             $.ajax({
               url: '/get_dropdown_titles',  // Flask route
@@ -261,7 +260,7 @@ function updateSurveyData(formObject){
                 });
       
                 // Set default value to "Industry - Energy"
-                const defaultValue = "Industry - Energy";
+                const defaultValue = "Electrical capacity - Capacity: installed";
                 if (data.includes(defaultValue)) {
                   dropdown.val(defaultValue);
                 } else {

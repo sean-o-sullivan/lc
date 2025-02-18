@@ -3,7 +3,9 @@ import plotly.graph_objects as go
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import mpld3
+from io import BytesIO
+import base64
 
 # ______________________________________________________ #
 
@@ -19,6 +21,31 @@ import pandas as pd
 
 
 df = pd.read_csv("cleanedGlobal.csv")
+
+
+from wordcloud import WordCloud
+from PIL import Image
+import numpy as np
+from io import BytesIO
+import base64
+import pandas as pd
+
+def create_wordcloud_image(text):
+    try:
+        wordcloud = WordCloud(width=750, height=500, background_color='white').generate(text)
+        wordcloud_image = wordcloud.to_array()
+        pil_image = Image.fromarray(np.uint8(wordcloud_image))
+        
+        buffer = BytesIO()
+        pil_image.save(buffer, format='PNG')
+        buffer.seek(0)
+        
+        img_str = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        return img_str
+    except Exception as e:
+        print(f"Error creating wordcloud: {e}")
+        return None
+    
 
 
 def create_survey_plot():
@@ -91,18 +118,19 @@ def create_survey_plot():
                     )
                     br+=1
         else:
-            text=""
-            for item in df[f"{nam}"]:
-                text = text+item
-             
-            wordcloud = WordCloud(width=750, height=500, background_color='white').generate(text)
-            plt.figure(figsize=(7.5, 5))
-            plt.imshow(wordcloud, interpolation='bilinear')
-            plt.axis("off")  # Remove axes
-            plt.show()
+            texters=""
+            for item in df[nam]:
+                texters+=" "+item
+
+            print(f'textors {texters}')
+            img_str = create_wordcloud_image(texters)
+            if img_str:
+                word_html_str = f"""<img src="data:image/png;base64,{img_str}" alt="WordCloud">"""
+                survey_plots_dict["cloud"] = word_html_str
+            else:
+                print("ASFHASUIDHASIUHF")
 
 
-    # Update layout
     Barfig.update_layout(
         height=500,
         width=750,
@@ -110,7 +138,7 @@ def create_survey_plot():
         font_color="black",
         title_font_color="black",
         legend_title_font_color="black",
-        margin=dict(l=0, r=0, t=80, b=0, pad=0),  # increased top margin
+        margin=dict(l=0, r=0, t=80, b=0, pad=0),  
         plot_bgcolor='#f8f9fa',   
         paper_bgcolor='white'    
     )
@@ -122,15 +150,13 @@ def create_survey_plot():
         font_color="black",
         title_font_color="black",
         legend_title_font_color="black",
-        margin=dict(l=0, r=0, t=80, b=0, pad=0),  # increased top margin
+        margin=dict(l=0, r=0, t=80, b=0, pad=0),  
         plot_bgcolor='#f8f9fa',   
         paper_bgcolor='white'    
     )
-    Barfig.show()
-    Piefig.show()
 
     survey_plots_dict["bar"] = Barfig.to_html()
     survey_plots_dict["pie"] = Piefig.to_html()
-    survey_plots_dict["cloud"] = wordcloud
+    print('all done! + saved!!! ')
 
     return survey_plots_dict

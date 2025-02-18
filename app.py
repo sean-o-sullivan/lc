@@ -27,7 +27,6 @@ def appendData():
             data['comments'],
             data['netzero'],
             data['climate_impact'],
-            data['renewable_energy'],
             data['policy_support'], 
             data['lifestyle_change']
         ])
@@ -55,10 +54,22 @@ def get_divergence_plot(title):
     return divergence_plots_dict[title]
 
 
-
-@app.route('/get_survey_plot/<title>')  
-def get_survey_plot():  
-    return create_survey_plot()
+@app.route('/get_survey_plot/')
+def get_survey_plot():
+    try:
+        survey_plots = create_survey_plot()
+        
+        print('sending1')
+        return jsonify({
+            'plotHtml': {
+                'bar': survey_plots["bar"],
+                'pie': survey_plots["pie"],
+                'cloud': survey_plots["cloud"]
+            }
+        })
+    except Exception as e:
+        print(f"Error in get_survey_plot: {e}")
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
